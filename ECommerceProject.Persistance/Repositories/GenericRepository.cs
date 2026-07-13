@@ -36,14 +36,14 @@ namespace ECommerceProject.Persistance.Repositories
             return true;
         }
 
-        public IQueryable<T> GetAll(bool tracking = true)
+        public async Task<List<T>> GetAll(bool tracking = true)
         {
             var query = _context.Set<T>().AsQueryable();
             if (!tracking)
             {
                 query = query.AsNoTracking();
             }
-            return query;
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id, bool tracking = true)
@@ -55,13 +55,13 @@ namespace ECommerceProject.Persistance.Repositories
             return await query.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
         }
 
-        public IQueryable<T> GetWhere(Expression<Func<T, bool>> method, bool tracking = true)
+        public async Task<List<T>> GetWhere(Expression<Func<T, bool>> method, bool tracking = true)
         {
             var query = Table.Where(method);
             if (!tracking)
                 query = query.AsNoTracking();
 
-            return query;
+            return await query.ToListAsync();
         }
 
         public bool Remove(T model)

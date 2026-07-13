@@ -13,8 +13,8 @@ namespace ECommerceProject.Application.Repositories
 
         //okuma operasyonlarım.
         //tracking sadece db den veri okurken kullanılan bir özelliktir.
-        IQueryable<T> GetAll(bool tracking = true);
-        IQueryable<T> GetWhere(Expression<Func<T, bool>> method, bool tracking = true);
+        Task<List<T>> GetAll(bool tracking = true);
+        Task<List<T>> GetWhere(Expression<Func<T, bool>> method, bool tracking = true);
         Task<T> GetByIdAsync(string id, bool tracking = true);
 
         //Yazma operasyonlarım.
