@@ -15,7 +15,7 @@ namespace ECommerceProject.Application.Repositories
         //tracking sadece db den veri okurken kullanılan bir özelliktir.
         Task<List<T>> GetAll(bool tracking = true);
         Task<List<T>> GetWhere(Expression<Func<T, bool>> method, bool tracking = true);
-        Task<T> GetByIdAsync(string id, bool tracking = true);
+        Task<T> GetByIdAsync(string id, bool tracking = true, bool ignoreQueryFilters = false);
 
         //Yazma operasyonlarım.
         //ekleme işleminde Ef Core takip etmek zorundadır. default tracking true gelir yani
@@ -24,6 +24,8 @@ namespace ECommerceProject.Application.Repositories
         Task<bool> AddRangeAsync(List<T> datas);
         bool Remove(T model);
         bool Update(T model);
+        bool Restore(T model);
+
 
         //SaveAsync kullanmamızın sebebi Unit Of Work. yani işlerin tek bir transaction ile yapılması.
         //yani birden fazla işlem yapıldığında hepsi başarılı olursa commit edilir,

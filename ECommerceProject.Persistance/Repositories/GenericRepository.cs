@@ -46,11 +46,16 @@ namespace ECommerceProject.Persistance.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(string id, bool tracking = true)
+        public async Task<T> GetByIdAsync(string id, bool tracking = true, bool ignoreQueryFilters = false)
         {
             var query = Table.AsQueryable();
             if (!tracking)
                 query = query.AsNoTracking();
+
+            if (ignoreQueryFilters)
+            {
+                query = query.IgnoreQueryFilters();
+            }
 
             return await query.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
         }
@@ -69,6 +74,15 @@ namespace ECommerceProject.Persistance.Repositories
             EntityEntry<T> entityEntry = Table.Remove(model);
             return entityEntry.State == EntityState.Deleted;
 
+        }
+
+        public bool Restore(T model)
+        {
+            model.IsDeleted = false;
+            model.DeletedDate = null;
+
+            EntityEntry<T> entityEntry = Table.Update(model);
+            return entityEntry.State == EntityState.Modified;
         }
 
         public async Task<int> SaveAsync()
