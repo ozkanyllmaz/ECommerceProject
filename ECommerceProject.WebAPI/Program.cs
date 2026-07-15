@@ -1,5 +1,6 @@
 using ECommerceProject.Persistance;
 using ECommerceProject.Application;
+using ECommerceProject.Application.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(ProductProfile).Assembly));
 
 var app = builder.Build();
 
