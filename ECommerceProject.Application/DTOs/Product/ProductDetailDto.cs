@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.DTOs.Product
 {
-    public class ProductListDto
+    public class ProductDetailDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

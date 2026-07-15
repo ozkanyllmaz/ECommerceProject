@@ -4,9 +4,8 @@ using System.Text;
 
 namespace ECommerceProject.Application.DTOs.Product
 {
-    public class ProductListDto
+    public class ProductUpdateDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
