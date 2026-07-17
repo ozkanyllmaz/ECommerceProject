@@ -12,7 +12,8 @@ namespace ECommerceProject.Persistance.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        private readonly ECommerceDbContext _context;
+        // miras alan sınfılar erişebilsin diye protected
+        protected readonly ECommerceDbContext _context;
 
         public GenericRepository(ECommerceDbContext context)
         {
@@ -36,6 +37,11 @@ namespace ECommerceProject.Persistance.Repositories
             return true;
         }
 
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await Table.AnyAsync(predicate);
+        }
+
         public async Task<List<T>> GetAll(bool tracking = true)
         {
             var query = _context.Set<T>().AsQueryable();
@@ -46,7 +52,7 @@ namespace ECommerceProject.Persistance.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(string id, bool tracking = true, bool ignoreQueryFilters = false)
+        public async Task<T?> GetByIdAsync(string id, bool tracking = true, bool ignoreQueryFilters = false)
         {
             var query = Table.AsQueryable();
             if (!tracking)
