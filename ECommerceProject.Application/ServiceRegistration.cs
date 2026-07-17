@@ -5,6 +5,7 @@ using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
+
 namespace ECommerceProject.Application
 {
     public static class ServiceRegistration
@@ -12,6 +13,7 @@ namespace ECommerceProject.Application
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }
