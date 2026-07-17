@@ -1,0 +1,17 @@
+﻿using ECommerceProject.Application.Abstractions;
+using ECommerceProject.Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ECommerceProject.Infrastructure
+{
+    public static class ServiceRegistration
+    {
+        public static void AddInfrastructureServices(this IServiceCollection services)
+        {
+            services.AddScoped<ITokenService, TokenService>();
+        }
+    }
+}
