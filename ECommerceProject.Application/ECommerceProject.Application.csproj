@@ -8,11 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="MediatR" Version="14.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ECommerceProject.Domain\ECommerceProject.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Products\Commands\DeleteProduct\" />
+    <Folder Include="Features\Products\Commands\UpdateProduct\" />
+    <Folder Include="Features\Products\Queries\GetAllProducts\" />
+    <Folder Include="Features\Products\Queries\GetProductById\" />
   </ItemGroup>
 
 </Project>

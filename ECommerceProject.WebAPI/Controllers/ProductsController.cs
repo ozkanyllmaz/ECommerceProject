@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ECommerceProject.Domain.Entities;
+using MediatR;
+using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
@@ -40,18 +42,8 @@ namespace ECommerceProject.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto model)
-        {
-            var result = await _productService.InsertAsync(model);
-
-            if (result)
-            {
-                //return StatusCode(StatusCodes.Status201Created, "Ürün başarıyla eklendi");
-                return CreateActionResultInstance(CustomResponseDto<Product>.Success(201, "Ürün başarıyla eklendi"));
-            }
-            //return BadRequest("Ürün eklenirken bir hata oluştu");
-            return CreateActionResultInstance(CustomResponseDto<Product>.Fail(400, "Ürün eklenirken bir hata oluştu"));
-        }
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommandRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
