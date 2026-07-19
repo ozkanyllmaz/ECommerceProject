@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using ECommerceProject.Domain.Entities;
 using MediatR;
 using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
+using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
@@ -22,13 +23,18 @@ namespace ECommerceProject.WebAPI.Controllers
             _productService = productService;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetProducts()
+        //{
+        //    var products = await _productService.GetAllProductListAsync();
+        //    //return Ok(products);
+        //    return CreateActionResultInstance(CustomResponseDto<List<ProductListDto>>.Success(200, products, "Ürünler başarıyla listelendi"));
+        //}
+
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
-        {
-            var products = await _productService.GetAllProductListAsync();
-            //return Ok(products);
-            return CreateActionResultInstance(CustomResponseDto<List<ProductListDto>>.Success(200, products, "Ürünler başarıyla listelendi"));
-        }
+        public async Task<IActionResult> GetAllProduct([FromQuery] GetAllProductsQueryRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById([FromRoute] Guid id)

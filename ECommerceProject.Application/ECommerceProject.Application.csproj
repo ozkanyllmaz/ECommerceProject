@@ -19,7 +19,6 @@
   <ItemGroup>
     <Folder Include="Features\Products\Commands\DeleteProduct\" />
     <Folder Include="Features\Products\Commands\UpdateProduct\" />
-    <Folder Include="Features\Products\Queries\GetAllProducts\" />
     <Folder Include="Features\Products\Queries\GetProductById\" />
   </ItemGroup>
 

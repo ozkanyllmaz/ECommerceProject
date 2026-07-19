@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Products.Commands.CreateProduct
 {
-    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CustomResponseDto<CreateProductCommandResponse>>
+    internal class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CustomResponseDto<CreateProductCommandResponse>>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
