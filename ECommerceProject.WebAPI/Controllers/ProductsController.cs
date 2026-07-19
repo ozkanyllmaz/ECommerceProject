@@ -9,10 +9,11 @@ using ECommerceProject.Domain.Entities;
 using MediatR;
 using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
+using ECommerceProject.Application.Features.Products.Queries.GetProductById;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductsController : CustomBaseController
     {
@@ -23,29 +24,26 @@ namespace ECommerceProject.WebAPI.Controllers
             _productService = productService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetProducts()
-        //{
-        //    var products = await _productService.GetAllProductListAsync();
-        //    //return Ok(products);
-        //    return CreateActionResultInstance(CustomResponseDto<List<ProductListDto>>.Success(200, products, "Ürünler başarıyla listelendi"));
-        //}
 
         [HttpGet]
         public async Task<IActionResult> GetAllProduct([FromQuery] GetAllProductsQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById([FromRoute] Guid id)
-        {
-            var productDto = await _productService.GetProductById(id);
-            if (productDto == null)
-            {
-                return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Fail(404, "Aradığınız ürün bulunamadı"));
-            }
-            return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Success(200, productDto, "Ürün getirildi"));
-        }
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetProductById([FromRoute] Guid id)
+        //{
+        //    var productDto = await _productService.GetProductById(id);
+        //    if (productDto == null)
+        //    {
+        //        return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Fail(404, "Aradığınız ürün bulunamadı"));
+        //    }
+        //    return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Success(200, productDto, "Ürün getirildi"));
+        //}
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductById([FromQuery] GetProductByIdQueryRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
 
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommandRequest request)

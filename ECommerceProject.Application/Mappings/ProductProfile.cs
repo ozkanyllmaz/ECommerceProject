@@ -2,6 +2,7 @@
 using ECommerceProject.Application.DTOs.Product;
 using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
+using ECommerceProject.Application.Features.Products.Queries.GetProductById;
 using ECommerceProject.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace ECommerceProject.Application.Mappings
             // Veri okuma, listeleme
             // Akış Yönü: Db -> Backend -> Frontend 
             CreateMap<Product, GetAllProductsQueryResponse>();
-            CreateMap<Product, ProductDetailDto>();
+            CreateMap<Product, GetProductByIdQueryResponse>();
 
             // Veri ekleme, güncelle
             // Akış Yönü: Frontend -> Backend -> Db
