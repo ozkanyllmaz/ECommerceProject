@@ -11,6 +11,7 @@ using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
 using ECommerceProject.Application.Features.Products.Queries.GetProductById;
 using ECommerceProject.Application.Features.Products.Commands.DeleteProduct;
+using ECommerceProject.Application.Features.Products.Commands.RestoreProduct;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
@@ -54,22 +55,25 @@ namespace ECommerceProject.WebAPI.Controllers
         public async Task<IActionResult> DeleteProduct([FromRoute] DeleteProductCommandRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
+        [HttpPut("{Id}/restore")]
+        public async Task<IActionResult> RestoreProduct([FromRoute] RestoreProductCommandRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
 
 
 
 
-        [HttpPost("{id}/restore")]
-        public async Task<IActionResult> RestoreProduct([FromRoute] Guid id)
-        {
-            var result = await _productService.RestoreProductAsync(id);
-            if (!result)
-            {
-                //return NotFound("Geri getirilmek istenen ürün bulunamadı");
-                return CreateActionResultInstance(CustomResponseDto<NoContent>.Fail(404, "Geri getirilmek istenen ürün bulunamadı"));
-            }
-            //return Ok(new { message = "IsDeleted ürün geri getirildi. (Aktifleştirildi)" });
-            return CreateActionResultInstance(CustomResponseDto<NoContent>.Success(204, "IsDeleted ürün geri getirildi. (Aktifleştirildi)"));
-        }
+        //[HttpPost("{id}/restore")]
+        //public async Task<IActionResult> RestoreProduct([FromRoute] Guid id)
+        //{
+        //    var result = await _productService.RestoreProductAsync(id);
+        //    if (!result)
+        //    {
+        //        //return NotFound("Geri getirilmek istenen ürün bulunamadı");
+        //        return CreateActionResultInstance(CustomResponseDto<NoContent>.Fail(404, "Geri getirilmek istenen ürün bulunamadı"));
+        //    }
+        //    //return Ok(new { message = "IsDeleted ürün geri getirildi. (Aktifleştirildi)" });
+        //    return CreateActionResultInstance(CustomResponseDto<NoContent>.Success(204, "IsDeleted ürün geri getirildi. (Aktifleştirildi)"));
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] ProductUpdateDto model)
