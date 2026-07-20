@@ -60,52 +60,52 @@ namespace ECommerceProject.Application.Services
             return newTokenDto; 
         }
 
-        public async Task<TokenDto> LoginAsync(UserLoginDto userLoginDto)
-        {
-            var user = await _userRepository.GetByEmailAsync(userLoginDto.Email);
-            if (user == null)
-            {
-                throw new ArgumentException("Email veya şifre hatalı");
-            }
-            if(!HashingHelper.VerifyPasswordHash(userLoginDto.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                throw new ArgumentException("Email veya şifre hatalı");
-            }
+        //public async Task<TokenDto> LoginAsync(UserLoginDto userLoginDto)
+        //{
+        //    var user = await _userRepository.GetByEmailAsync(userLoginDto.Email);
+        //    if (user == null)
+        //    {
+        //        throw new ArgumentException("Email veya şifre hatalı");
+        //    }
+        //    if(!HashingHelper.VerifyPasswordHash(userLoginDto.Password, user.PasswordHash, user.PasswordSalt))
+        //    {
+        //        throw new ArgumentException("Email veya şifre hatalı");
+        //    }
 
-            var roles = await _userRepository.GetRolesByUserIdAsync(user.Id);
-            var tokenDto = _tokenService.CreateAccessToken(user, roles);
+        //    var roles = await _userRepository.GetRolesByUserIdAsync(user.Id);
+        //    var tokenDto = _tokenService.CreateAccessToken(user, roles);
 
-            var refreshToken = new RefreshToken
-            {
-                UserId = user.Id,
-                Token = tokenDto.RefreshToken,
-                ExpiresDate = tokenDto.AccessTokenExpiration.AddDays(7),
-                CreatedByIp = "Unknown"
-            };
-            await _refreshTokenRepository.AddAsync(refreshToken);
-            await _refreshTokenRepository.SaveAsync();
+        //    var refreshToken = new RefreshToken
+        //    {
+        //        UserId = user.Id,
+        //        Token = tokenDto.RefreshToken,
+        //        ExpiresDate = tokenDto.AccessTokenExpiration.AddDays(7),
+        //        CreatedByIp = "Unknown"
+        //    };
+        //    await _refreshTokenRepository.AddAsync(refreshToken);
+        //    await _refreshTokenRepository.SaveAsync();
 
-            return tokenDto;
-        }
+        //    return tokenDto;
+        //}
 
-        public async Task RegisterAsync(UserRegisterDto userRegisterDto)
-        {
-            var isEmailExist = await _userRepository.AnyAsync(u => u.Email == userRegisterDto.Email);
-            if (isEmailExist)
-            {
-                throw new InvalidOperationException("Bu email adresi zaten kullanılıyor.");
-            }
+        //public async Task RegisterAsync(UserRegisterDto userRegisterDto)
+        //{
+        //    var isEmailExist = await _userRepository.AnyAsync(u => u.Email == userRegisterDto.Email);
+        //    if (isEmailExist)
+        //    {
+        //        throw new InvalidOperationException("Bu email adresi zaten kullanılıyor.");
+        //    }
 
-            HashingHelper.CreatePasswordHash(userRegisterDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        //    HashingHelper.CreatePasswordHash(userRegisterDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            var user = _mapper.Map<User>(userRegisterDto);
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            user.Status = true;
+        //    var user = _mapper.Map<User>(userRegisterDto);
+        //    user.PasswordHash = passwordHash;
+        //    user.PasswordSalt = passwordSalt;
+        //    user.Status = true;
 
-            await _userRepository.AddAsync(user);
-            await _userRepository.SaveAsync();
+        //    await _userRepository.AddAsync(user);
+        //    await _userRepository.SaveAsync();
 
-        }
+        //}
     }
 }
