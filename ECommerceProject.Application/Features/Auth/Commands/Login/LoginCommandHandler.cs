@@ -46,7 +46,14 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
             await _refreshTokenRepository.AddAsync(refreshToken);
             await _refreshTokenRepository.SaveAsync();
 
-            return CustomResponseDto<LoginCommandResponse>.Success(200, "Giriş başarılı");
+            var responseData = new LoginCommandResponse
+            {
+                AccessToken = tokenDto.AccessToken,
+                AccessTokenExpiration = tokenDto.AccessTokenExpiration,
+                RefreshToken = refreshToken.Token
+            };
+
+            return CustomResponseDto<LoginCommandResponse>.Success(200, responseData, "Giriş başarılı");
         }
     }
 }

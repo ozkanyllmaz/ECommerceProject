@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ECommerceProject.Application.DTOs.Auth;
 using ECommerceProject.Application.Features.Auth.Commands.Register;
 using ECommerceProject.Domain.Entities;
 using System;

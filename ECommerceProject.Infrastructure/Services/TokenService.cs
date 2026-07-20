@@ -1,17 +1,18 @@
 ﻿using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.Configurations;
-using ECommerceProject.Application.DTOs.Auth;
 using ECommerceProject.Application.Configurations;
+using ECommerceProject.Application.DTOs.Auth;
+using ECommerceProject.Application.Features.Auth.Commands.RefreshTokens;
+using ECommerceProject.Domain.Entities;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.JsonWebTokens;
-using ECommerceProject.Domain.Entities;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace ECommerceProject.Infrastructure.Services
 {
