@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Products.Commands.RestoreProduct
 {
-    internal class RestoreProductCommandHandler(IProductRepository _productRepository, IMapper _mapper) : IRequestHandler<RestoreProductCommandRequest, CustomResponseDto<RestoreProductCommandResponse>>
+    internal class RestoreProductCommandHandler(IProductRepository _productRepository) : IRequestHandler<RestoreProductCommandRequest, CustomResponseDto<RestoreProductCommandResponse>>
     {
         public async Task<CustomResponseDto<RestoreProductCommandResponse>> Handle(RestoreProductCommandRequest request, CancellationToken cancellationToken)
         {

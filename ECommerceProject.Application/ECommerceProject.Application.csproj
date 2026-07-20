@@ -16,8 +16,4 @@
     <ProjectReference Include="..\ECommerceProject.Domain\ECommerceProject.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Products\Commands\UpdateProduct\" />
-  </ItemGroup>
-
 </Project>

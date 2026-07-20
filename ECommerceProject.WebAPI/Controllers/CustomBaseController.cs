@@ -9,8 +9,8 @@ namespace ECommerceProject.WebAPI.Controllers
     [ApiController]
     public class CustomBaseController : ControllerBase
     {
-        private IMediator? _mediator;
-        protected IMediator? Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        //private IMediator? _mediator;
+        protected IMediator Mediator => HttpContext.RequestServices.GetService<IMediator>();
         public IActionResult CreateActionResultInstance<T>(CustomResponseDto<T> response)
         {
             // Http 204 (No Content) ise geri boş response döndür.

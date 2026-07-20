@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Product;
 using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
+using ECommerceProject.Application.Features.Products.Commands.UpdateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
 using ECommerceProject.Application.Features.Products.Queries.GetProductById;
 using ECommerceProject.Domain.Entities;
@@ -23,7 +24,7 @@ namespace ECommerceProject.Application.Mappings
 
             // Veri ekleme, güncelle
             // Akış Yönü: Frontend -> Backend -> Db
-            CreateMap<ProductUpdateDto, Product>();
+            CreateMap<UpdateProductCommandRequest, Product>();
             CreateMap<CreateProductCommandRequest, Product>();
         }
     }

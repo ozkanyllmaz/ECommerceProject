@@ -12,6 +12,7 @@ using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
 using ECommerceProject.Application.Features.Products.Queries.GetProductById;
 using ECommerceProject.Application.Features.Products.Commands.DeleteProduct;
 using ECommerceProject.Application.Features.Products.Commands.RestoreProduct;
+using ECommerceProject.Application.Features.Products.Commands.UpdateProduct;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
@@ -19,29 +20,9 @@ namespace ECommerceProject.WebAPI.Controllers
     [ApiController]
     public class ProductsController : CustomBaseController
     {
-        private readonly IProductService _productService;
-
-        public ProductsController(IProductService productService)
-        {
-            _productService = productService;
-        }
-
-
         [HttpGet]
         public async Task<IActionResult> GetAllProduct([FromQuery] GetAllProductsQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
-
-
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetProductById([FromRoute] Guid id)
-        //{
-        //    var productDto = await _productService.GetProductById(id);
-        //    if (productDto == null)
-        //    {
-        //        return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Fail(404, "Aradığınız ürün bulunamadı"));
-        //    }
-        //    return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Success(200, productDto, "Ürün getirildi"));
-        //}
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetProductById([FromRoute] GetProductByIdQueryRequest request)
@@ -59,33 +40,8 @@ namespace ECommerceProject.WebAPI.Controllers
         public async Task<IActionResult> RestoreProduct([FromRoute] RestoreProductCommandRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
-
-
-
-        //[HttpPost("{id}/restore")]
-        //public async Task<IActionResult> RestoreProduct([FromRoute] Guid id)
-        //{
-        //    var result = await _productService.RestoreProductAsync(id);
-        //    if (!result)
-        //    {
-        //        //return NotFound("Geri getirilmek istenen ürün bulunamadı");
-        //        return CreateActionResultInstance(CustomResponseDto<NoContent>.Fail(404, "Geri getirilmek istenen ürün bulunamadı"));
-        //    }
-        //    //return Ok(new { message = "IsDeleted ürün geri getirildi. (Aktifleştirildi)" });
-        //    return CreateActionResultInstance(CustomResponseDto<NoContent>.Success(204, "IsDeleted ürün geri getirildi. (Aktifleştirildi)"));
-        //}
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] ProductUpdateDto model)
-        {
-            var result = await _productService.UpdateProductAsync(id, model);
-            if (!result)
-            {
-                //return NotFound("Güncellenecek ürün bulunamadı.");
-                return CreateActionResultInstance(CustomResponseDto<NoContent>.Fail(404, "Güncellenecek ürün bulunamadı."));
-            }
-            //return Ok(new { message = "Ürün başarılıyla güncellendi" });
-            return CreateActionResultInstance(CustomResponseDto<NoContent>.Success(204, "Ürün başarılıyla güncellendi"));
-        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommandRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
     }
 }
