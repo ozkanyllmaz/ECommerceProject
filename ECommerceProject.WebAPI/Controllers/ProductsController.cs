@@ -10,10 +10,11 @@ using MediatR;
 using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
 using ECommerceProject.Application.Features.Products.Queries.GetProductById;
+using ECommerceProject.Application.Features.Products.Commands.DeleteProduct;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : CustomBaseController
     {
@@ -41,26 +42,21 @@ namespace ECommerceProject.WebAPI.Controllers
         //    return CreateActionResultInstance(CustomResponseDto<ProductDetailDto>.Success(200, productDto, "Ürün getirildi"));
         //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetProductById([FromQuery] GetProductByIdQueryRequest request)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetProductById([FromRoute] GetProductByIdQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommandRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
-        {
-            var result = await _productService.DeleteProductAsync(id);
-            if (!result)
-            {
-                //return NotFound("Silinmek istenen ürün bulunamadı.");
-                return CreateActionResultInstance(CustomResponseDto<NoContent>.Fail(404, "Silinecek ürün bulunamadı"));
-            }
-            //return Ok(new { message = "Ürün başarıyla silindi (Arşivlendi)" });
-            return CreateActionResultInstance(CustomResponseDto<NoContent>.Success(204, "Ürün başarıyla silindi (Arşivlendi)"));
-        }
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteProduct([FromRoute] DeleteProductCommandRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
+
+
+
+
 
         [HttpPost("{id}/restore")]
         public async Task<IActionResult> RestoreProduct([FromRoute] Guid id)
