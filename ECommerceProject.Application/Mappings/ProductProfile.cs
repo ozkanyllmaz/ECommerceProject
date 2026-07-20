@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ECommerceProject.Application.DTOs.Product;
 using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 using ECommerceProject.Application.Features.Products.Commands.UpdateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;

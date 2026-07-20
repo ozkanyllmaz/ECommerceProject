@@ -1,5 +1,4 @@
 ﻿using ECommerceProject.Application.Abstractions;
-using ECommerceProject.Application.DTOs.Product;
 using ECommerceProject.Application.DTOs.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Auth;
+using ECommerceProject.Application.Features.Auth.Commands;
 using ECommerceProject.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace ECommerceProject.Application.Mappings
         public AuthProfile()
         {
             //CreateMap<Kaynak, Hedef>();
-            CreateMap<UserRegisterDto, User>();
+            CreateMap<RegisterCommandRequest, User>();
         }
     }
 }
