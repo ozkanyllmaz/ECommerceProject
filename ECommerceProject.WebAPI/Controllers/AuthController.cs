@@ -1,7 +1,7 @@
 ﻿using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.DTOs.Auth;
 using ECommerceProject.Application.DTOs.Common;
-using ECommerceProject.Application.Features.Auth.Commands;
+using ECommerceProject.Application.Features.Auth.Commands.Register;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,24 +17,6 @@ namespace ECommerceProject.WebAPI.Controllers
         {
             _authService = authService;
         }
-
-        //[HttpPost("register")]
-        //public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
-        //{
-        //    try
-        //    {
-        //        await _authService.RegisterAsync(userRegisterDto);
-        //        return CreateActionResultInstance(CustomResponseDto<NoContentDto>.Success(201, "Kayıt işlemi başarılı"));
-        //    }
-        //    catch(InvalidOperationException ex)
-        //    {
-        //        return CreateActionResultInstance(CustomResponseDto<NoContentDto>.Fail(400, ex.Message));
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return CreateActionResultInstance(CustomResponseDto<NoContentDto>.Fail(500, "Sistemsel bir hata oluştu."));
-        //    } 
-        //}
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommandRequest request)
