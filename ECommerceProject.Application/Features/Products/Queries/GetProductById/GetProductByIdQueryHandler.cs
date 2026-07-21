@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Repositories;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Domain.Entities;
 using MediatR;
 using System;
@@ -25,7 +26,8 @@ namespace ECommerceProject.Application.Features.Products.Queries.GetProductById
             var product = await _productRepository.GetByIdAsync(request.Id.ToString());
             if(product == null)
             {
-                return CustomResponseDto<GetProductByIdQueryResponse>.Fail(404, "İstenilen id'de bir ürün bulunamadı");
+                //return CustomResponseDto<GetProductByIdQueryResponse>.Fail(404, "İstenilen id'de bir ürün bulunamadı");
+                throw new NotFoundException($"{request.Id} id'li ürün bulunamadı");
             }
             var productResponse = _mapper.Map<GetProductByIdQueryResponse>(product);
 

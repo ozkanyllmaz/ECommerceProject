@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Common;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Application.Repositories;
 using ECommerceProject.Domain.Entities;
 using MediatR;
@@ -15,7 +16,7 @@ namespace ECommerceProject.Application.Features.Products.Commands.UpdateProduct
         {
             var product = await _productRepository.GetByIdAsync(request.Id.ToString());
             if (product == null)
-                return CustomResponseDto<UpdateProductCommandResponse>.Fail(404, "Ürün bulunamadı");
+                throw new NotFoundException($"Ürün bulunamadı Id={request.Id}");
 
             var updatedProduct = _mapper.Map(request, product);
 

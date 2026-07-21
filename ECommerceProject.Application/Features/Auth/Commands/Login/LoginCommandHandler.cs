@@ -7,6 +7,7 @@ using ECommerceProject.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Text;
 
 namespace ECommerceProject.Application.Features.Auth.Commands.Login
@@ -28,9 +29,9 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
         {
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null)
-                return CustomResponseDto<LoginCommandResponse>.Fail(400, "Email veya şifre hatalı");
+                throw new AuthenticationException("Email veya şifre hatalı");
             if (!HashingHelper.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-                return CustomResponseDto<LoginCommandResponse>.Fail(400, "Email veya şifre hatalı");
+                throw new AuthenticationException("Email veya şifre hatalı");
 
             var roles = await _userRepository.GetRolesByUserIdAsync(user.Id);
             var tokenDto = _tokenService.CreateAccessToken(user, roles);

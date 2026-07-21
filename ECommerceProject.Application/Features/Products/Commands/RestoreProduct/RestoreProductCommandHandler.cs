@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Common;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Application.Repositories;
 using MediatR;
 using System;
@@ -14,7 +15,7 @@ namespace ECommerceProject.Application.Features.Products.Commands.RestoreProduct
         {
             var softDeletedProduct = await _productRepository.GetByIdAsync(request.Id.ToString(),ignoreQueryFilters: true);
             if (softDeletedProduct == null)
-                return CustomResponseDto<RestoreProductCommandResponse>.Fail(404, "Aranılan ürün bulunamadı.");
+                throw new NotFoundException($"Ürün bulunamadı Id={request.Id}");
             else
                 _productRepository.Restore(softDeletedProduct);
             await _productRepository.SaveAsync();

@@ -1,6 +1,7 @@
 ﻿using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Repositories;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Domain.Entities;
 using MediatR;
 using System;
@@ -26,9 +27,9 @@ namespace ECommerceProject.Application.Features.Auth.Commands.RefreshTokens
         {
             var existingToken = await _refreshTokenRepository.GetTokenWithUserAsync(request.RefreshToken);
             if (existingToken == null)
-                return CustomResponseDto<RefreshTokensCommandResponse>.Fail(404, "Token bulunamadı");
-            if(!existingToken.IsActive(DateTime.UtcNow))
-                return CustomResponseDto<RefreshTokensCommandResponse>.Fail(400, "Token süresi dolmuş veya iptal edilmiş");
+                throw new NotFoundException("Token bulunamadı");
+            if (!existingToken.IsActive(DateTime.UtcNow))
+                throw new AuthenticationException("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
 
             existingToken.RevokedDate = DateTime.UtcNow;
             existingToken.ReasonRevoked = "Yeni token ile değiştirildi.";

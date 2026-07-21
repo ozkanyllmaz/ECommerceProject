@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Repositories;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Domain.Entities;
 using MediatR;
 using System;
@@ -33,8 +34,7 @@ namespace ECommerceProject.Application.Features.Products.Commands.CreateProduct
                 return CustomResponseDto<CreateProductCommandResponse>.Success(201, "Ürün başarıyla eklendi");
             }
 
-            return CustomResponseDto<CreateProductCommandResponse>.Fail(400, "Ürün db ye eklenirken bir hata oluştu");
-            
+            throw new NotFoundException("Ürün eklenirken sorun oluştu.");
         }
     }
 }

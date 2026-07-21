@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Repositories;
+using ECommerceProject.Application.Exceptions;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace ECommerceProject.Application.Features.Products.Commands.DeleteProduct
         {
             var product = await _productRepository.GetByIdAsync(request.Id.ToString());
             if (product == null)
-                CustomResponseDto<DeleteProductCommandResponse>.Fail(404 ,"Aradığınız ürün bulunamadı");
+                throw new NotFoundException($"Ürün bulunamadı Id={request.Id}");
             else
                 _productRepository.Remove(product);
             await _productRepository.SaveAsync();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Common;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Application.Repositories;
 using ECommerceProject.Application.Security.Hashing;
 using ECommerceProject.Domain.Entities;
@@ -25,7 +26,7 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Register
         {
             var isEmailExist = await _userRepository.AnyAsync(x => x.Email == request.Email);
             if (isEmailExist)
-                return CustomResponseDto<RegisterCommandResponse>.Fail(400, "Bu email sistemde kayıtlı");
+                throw new BusinessException("Email zaten sistemde kayıtlı");
 
             HashingHelper.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
