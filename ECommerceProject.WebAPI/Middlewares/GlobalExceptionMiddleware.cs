@@ -1,6 +1,7 @@
 ﻿using ECommerceProject.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 
 namespace ECommerceProject.WebAPI.Middlewares
@@ -37,6 +38,12 @@ namespace ECommerceProject.WebAPI.Middlewares
             int statusCode = StatusCodes.Status500InternalServerError;
             string title = "Sunucu Hatası";
 
+            // RRC 7807 hata standardı formatı
+            var problemDetails = new ProblemDetails
+            {
+                Instance = context.Request.Path // Hatanın olduğu endpoint
+            };
+
             switch (exception)
             {
                 case NotFoundException:
@@ -60,9 +67,13 @@ namespace ECommerceProject.WebAPI.Middlewares
                     title = "Yetkisiz İşlem";
                     break;
 
-                case ValidationException:
+                case Application.Exceptions.ValidationException validationException:
                     statusCode = StatusCodes.Status400BadRequest;
-                    title = "Doğrulama Hatası";
+                    title = "Doğrulama Hataları";
+                    problemDetails.Status = statusCode;
+                    problemDetails.Title = "Doğrulama Hatası";
+                    problemDetails.Detail = exception.Message;// Handler'daki message
+                    problemDetails.Extensions.Add("errors", validationException.Errors);
                     break;
 
                 case AuthenticationException:
@@ -74,21 +85,22 @@ namespace ECommerceProject.WebAPI.Middlewares
                     statusCode = StatusCodes.Status400BadRequest;
                     title = "Giriş Başarısız";
                     break;
+
+                default:
+                    problemDetails.Status = statusCode;
+                    problemDetails.Title = title;
+                    problemDetails.Detail = exception.Message;
+                    break;
+
             }
 
             //response ayarları
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
 
-            // RRC 7807 hata standardı formatı
-            var problemDetails = new ProblemDetails
-            {
-                Status = statusCode,
-                Title = title,
-                Detail = exception.Message, // Handler'daki message
-                Instance = context.Request.Path // Hatanın olduğu endpoint
-                
-            };
+            problemDetails.Status = statusCode;
+            problemDetails.Title = title;
+            problemDetails.Detail = exception.Message;// Handler'daki message
 
             var jsonResponse = JsonSerializer.Serialize(problemDetails);
             await context.Response.WriteAsync(jsonResponse);
