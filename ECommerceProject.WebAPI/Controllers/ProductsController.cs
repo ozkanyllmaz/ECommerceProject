@@ -12,6 +12,7 @@ using ECommerceProject.Application.Features.Products.Queries.GetProductById;
 using ECommerceProject.Application.Features.Products.Commands.DeleteProduct;
 using ECommerceProject.Application.Features.Products.Commands.RestoreProduct;
 using ECommerceProject.Application.Features.Products.Commands.UpdateProduct;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
@@ -19,6 +20,7 @@ namespace ECommerceProject.WebAPI.Controllers
     [ApiController]
     public class ProductsController : CustomBaseController
     {
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllProduct([FromQuery] GetAllProductsQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
@@ -27,6 +29,7 @@ namespace ECommerceProject.WebAPI.Controllers
         public async Task<IActionResult> GetProductById([FromRoute] GetProductByIdQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommandRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
