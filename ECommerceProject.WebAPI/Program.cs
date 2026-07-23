@@ -7,12 +7,14 @@ using ECommerceProject.Infrastructure.Services;
 using ECommerceProject.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using ECommerceProject.WebAPI.Middlewares;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
+using ECommerceProject.WebAPI.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 //------------------------------------
-var masterKey = builder.Configuration["EncryptionMasterKey"];
+var masterKey = builder.Configuration["Jwt:EncryptionMasterKey"];
 
 if (string.IsNullOrEmpty(masterKey))
 {
@@ -37,12 +39,14 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
     options.UseSqlServer(decryptedConnectionString));
 //------------------------------------
 
-
+//builder.Services.AddSerilogExtension(decryptedConnectionString);
+builder.Services.AddSerilogExtension(decryptedConnectionString);
+Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 // Add services to the container.
 builder.Services.AddPersistenceServices(decryptedConnectionString);
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -53,6 +57,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(ProductProfile).Assembly));
 
+// .NET'in HttpContext'e erişebilmesini sağlar.
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -66,6 +72,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

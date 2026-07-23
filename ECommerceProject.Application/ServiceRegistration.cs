@@ -22,6 +22,7 @@ namespace ECommerceProject.Application
             {
                 cfg.RegisterServicesFromAssembly(assembly);
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
 
             // FluentValidation kaydı

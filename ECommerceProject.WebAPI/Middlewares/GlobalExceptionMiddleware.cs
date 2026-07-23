@@ -1,6 +1,6 @@
-﻿using ECommerceProject.Application.Exceptions;
+﻿using ECommerceProject.Application.Abstractions;
+using ECommerceProject.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Net.NetworkInformation;
 using System.Text.Json;
 
@@ -26,8 +26,17 @@ namespace ECommerceProject.WebAPI.Middlewares
             }
             catch (Exception ex)
             {
-                // Handler'da bir hata fırlatılırsa ve kimse yakalamazsa buraya düşer.
-                _logger.LogError(ex, "Uygulamada yakalanamayan bir hata oluştu");
+                var userIdentityfier = context.User.Identity?.IsAuthenticated == true
+                    ? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                    : "Anonim";
+
+                using (Serilog.Context.LogContext.PushProperty("User", userIdentityfier))
+                {
+                    // Handler'da bir hata fırlatılırsa ve kimse yakalamazsa buraya düşer.
+                    _logger.LogError(ex, "İşlem sırasında bir kural ihlali oluştu: ");
+
+                }
+                
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -67,7 +76,7 @@ namespace ECommerceProject.WebAPI.Middlewares
                     title = "Yetkisiz İşlem";
                     break;
 
-                case Application.Exceptions.ValidationException validationException:
+                case ValidationException validationException:
                     statusCode = StatusCodes.Status400BadRequest;
                     title = "Doğrulama Hataları";
                     problemDetails.Status = statusCode;
@@ -101,6 +110,8 @@ namespace ECommerceProject.WebAPI.Middlewares
             problemDetails.Status = statusCode;
             problemDetails.Title = title;
             problemDetails.Detail = exception.Message;// Handler'daki message
+
+            
 
             var jsonResponse = JsonSerializer.Serialize(problemDetails);
             await context.Response.WriteAsync(jsonResponse);
