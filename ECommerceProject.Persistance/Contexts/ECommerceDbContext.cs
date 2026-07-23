@@ -27,6 +27,7 @@ namespace ECommerceProject.Persistance.Contexts
 
             //Entity çağırıldığı zaman silinmişleri otomatik gizle
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
         }
 
         //Ekleme ve güncelleme işlemlerinde CreatedDate ve UpdatedDate otomatik olarak ayarlanacak. 

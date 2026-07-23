@@ -3,11 +3,11 @@ using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Repositories;
 using ECommerceProject.Application.Security.Hashing;
+using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Security.Authentication;
 using System.Text;
 
 namespace ECommerceProject.Application.Features.Auth.Commands.Login
@@ -30,6 +30,7 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null)
                 throw new AuthenticationException("Email veya şifre hatalı");
+
             if (!HashingHelper.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 throw new AuthenticationException("Email veya şifre hatalı");
 
