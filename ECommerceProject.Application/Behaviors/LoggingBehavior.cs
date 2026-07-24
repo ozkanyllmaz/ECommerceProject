@@ -1,11 +1,13 @@
 ﻿using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.Features.Auth.Commands.Login;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 
 namespace ECommerceProject.Application.Behaviors
@@ -14,16 +16,24 @@ namespace ECommerceProject.Application.Behaviors
     {
         private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger, ICurrentUserService currentUserService)
+        public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger, ICurrentUserService currentUserService, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _currentUserService = currentUserService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = typeof(TRequest).Name;
+            var requestStatus = _httpContextAccessor.HttpContext;
+
+            var requestMethod = requestStatus.Request.Method;
+            var requestPath = requestStatus.Request.Path;
+            var requestProtocol = requestStatus.Request.Protocol;
+            var requestSheme = requestStatus.Request.Scheme;
 
             var userIdentityfier = _currentUserService.IsAuthenticated
                 ? (_currentUserService.Email ?? _currentUserService.UserId)
@@ -47,8 +57,8 @@ namespace ECommerceProject.Application.Behaviors
                 stopwatch.Stop();
 
                 _logger.LogInformation(
-                    "Request Tamamlandı: {RequestName} | Süre: {ElapseMilliseconds} ms",
-                    requestName, stopwatch.ElapsedMilliseconds);
+                    "Request Tamamlandı:{@requestMethod} | {@requestSheme} | {@requestPath} | {@requestProtocol} | Süre: {@ElapseMilliseconds} ms",
+                     requestMethod, requestSheme, requestPath, requestProtocol, stopwatch.ElapsedMilliseconds);
 
                 return response;
             }

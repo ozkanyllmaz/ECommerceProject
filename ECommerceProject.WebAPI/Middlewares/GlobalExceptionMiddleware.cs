@@ -33,7 +33,7 @@ namespace ECommerceProject.WebAPI.Middlewares
                 using (Serilog.Context.LogContext.PushProperty("User", userIdentityfier))
                 {
                     // Handler'da bir hata fırlatılırsa ve kimse yakalamazsa buraya düşer.
-                    _logger.LogError(ex, "İşlem sırasında bir kural ihlali oluştu: ");
+                    _logger.LogError(ex, "İşlem sırasında bir kural ihlali oluştu: {exception}", ex.Message);
 
                 }
                 
