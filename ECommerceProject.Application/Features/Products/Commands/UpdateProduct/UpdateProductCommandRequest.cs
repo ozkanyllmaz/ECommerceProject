@@ -1,4 +1,5 @@
-﻿using ECommerceProject.Application.DTOs.Common;
+﻿using ECommerceProject.Application.Abstractions;
+using ECommerceProject.Application.DTOs.Common;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Products.Commands.UpdateProduct
 {
-    public class UpdateProductCommandRequest : IRequest<CustomResponseDto<UpdateProductCommandResponse>>
+    public class UpdateProductCommandRequest : IRequest<CustomResponseDto<UpdateProductCommandResponse>>, ISecuredRequest
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
@@ -14,5 +15,6 @@ namespace ECommerceProject.Application.Features.Products.Commands.UpdateProduct
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string? ImageUrl { get; set; }
+        public string[] Roles => ["Admin", "Manager"];
     }
 }
