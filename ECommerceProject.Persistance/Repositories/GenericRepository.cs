@@ -42,12 +42,16 @@ namespace ECommerceProject.Persistance.Repositories
             return await Table.AnyAsync(predicate);
         }
 
-        public async Task<List<T>> GetAll(bool tracking = true)
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true)
         {
             var query = _context.Set<T>().AsQueryable();
             if (!tracking)
             {
                 query = query.AsNoTracking();
+            }
+            if(filter != null)
+            {
+                query = query.Where(filter);
             }
             return await query.ToListAsync();
         }

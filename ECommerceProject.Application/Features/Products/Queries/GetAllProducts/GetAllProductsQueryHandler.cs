@@ -22,7 +22,7 @@ namespace ECommerceProject.Application.Features.Products.Queries.GetAllProducts
 
         public async Task<CustomResponseDto<List<GetAllProductsQueryResponse>>> Handle(GetAllProductsQueryRequest request, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetAll(tracking: false);
+            var products = await _productRepository.GetListAsync(tracking: false);
 
             var mappedProduct = _mapper.Map<List<GetAllProductsQueryResponse>>(products);
 
