@@ -59,9 +59,24 @@ namespace ECommerceProject.WebAPI.Logging
                             AutoCreateSqlTable = true,
                         },
                         columnOptions: columnOptions))
+
+                .WriteTo.Logger(auditlog =>  auditlog
+                    .Filter.ByIncludingOnly(x => x.MessageTemplate.Text.StartsWith("AuditLog:"))
+                    .WriteTo.MSSqlServer(
+                        connectionString: connectionString,
+                        sinkOptions: new MSSqlServerSinkOptions
+                        {
+                            TableName = "AuditLogs",
+                            AutoCreateSqlTable = true
+                        }))
+
                 .CreateLogger();
 
-            services.AddLogging(logginghbuilder => logginghbuilder.AddSerilog(dispose: true));
+            services.AddLogging(logginghbuilder =>
+            {
+                logginghbuilder.ClearProviders();
+                logginghbuilder.AddSerilog(dispose: true);
+            });
         }
     }
 }
