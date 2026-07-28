@@ -104,5 +104,23 @@ namespace ECommerceProject.Persistance.Repositories
             EntityEntry<T> entityEntry = Table.Update(model);
             return entityEntry.State == EntityState.Modified;
         }
+
+        public IQueryable<T> GetListAsQueryable(bool tracking = true)
+        {
+            var query = _context.Set<T>().AsQueryable();
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return query;
+        }
+
+        public IQueryable<T> GetListWithFilterAsQueryable(Expression<Func<T, bool>> metod, bool tracking = true)
+        {
+            var query = Table.Where(metod);
+            if (!tracking)
+                query = query.AsNoTracking();
+            return query;
+        }
     }
 }

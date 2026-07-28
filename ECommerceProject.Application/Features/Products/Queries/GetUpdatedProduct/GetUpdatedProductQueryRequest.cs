@@ -7,8 +7,9 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Products.Queries.GetUpdatedProduct
 {
-    public class GetUpdatedProductQueryRequest : IRequest<CustomResponseDto<List<GetUpdatedProductQueryResponse>>>, ISecuredRequest
+    public class GetUpdatedProductQueryRequest : IRequest<CustomResponseDto<PaginationResult<GetUpdatedProductQueryResponse>>>, ISecuredRequest
     {
         public string[] Roles => ["Admin", "Manager", "Customer"];
+        public PaginationParameter paginationParameter { get; set; } = new PaginationParameter();
     }
 }

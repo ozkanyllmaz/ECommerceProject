@@ -35,6 +35,9 @@ namespace ECommerceProject.Application.Repositories
         // Dışarıdan Lambda ifadesi alıp bool döner.
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
+        IQueryable<T> GetListAsQueryable(bool tracking = true);
+        IQueryable<T> GetListWithFilterAsQueryable(Expression<Func<T, bool>> metod, bool tracking = true);
+
 
     }
 }
