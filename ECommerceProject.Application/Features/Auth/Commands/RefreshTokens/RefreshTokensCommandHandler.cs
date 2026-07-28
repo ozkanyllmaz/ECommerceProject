@@ -15,12 +15,14 @@ namespace ECommerceProject.Application.Features.Auth.Commands.RefreshTokens
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public RefreshTokensCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository, ITokenService tokenService)
+        public RefreshTokensCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository, ITokenService tokenService, ICurrentUserService currentUserService)
         {
             _refreshTokenRepository = refreshTokenRepository;
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<CustomResponseDto<RefreshTokensCommandResponse>> Handle(RefreshTokensCommandRequest request, CancellationToken cancellationToken)
@@ -31,11 +33,20 @@ namespace ECommerceProject.Application.Features.Auth.Commands.RefreshTokens
             if (!existingToken.IsActive(DateTime.UtcNow))
                 throw new AuthenticationException("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
 
+            string currentDeviceId = _currentUserService.DeviceId!;
+            if (string.IsNullOrEmpty(_currentUserService.DeviceId))
+                throw new UnauthorizedAccessException("Cihaz kimliği bulunamadı");
+
             existingToken.RevokedDate = DateTime.UtcNow;
             existingToken.ReasonRevoked = "Yeni token ile değiştirildi.";
 
+            if(existingToken == null || existingToken.DeviceId != currentDeviceId)
+            {
+                throw new UnauthorizedAccessException("DeviceId uyuşmuyor. Şüpheli işlem!!");
+            }
+
             var roles = await _userRepository.GetRolesByUserIdAsync(existingToken.UserId);
-            var newTokenDto = _tokenService.CreateAccessToken(existingToken.User, roles);
+            var newTokenDto = _tokenService.CreateAccessToken(existingToken.User, roles, currentDeviceId);
 
             var newRefreshToken = new RefreshToken
             {
@@ -43,7 +54,8 @@ namespace ECommerceProject.Application.Features.Auth.Commands.RefreshTokens
                 Token = newTokenDto.RefreshToken,
                 ExpiresDate = newTokenDto.AccessTokenExpiration.AddDays(7),
                 CreatedByIp = "Unknown",
-                ReplacedByToken = newTokenDto.RefreshToken
+                ReplacedByToken = newTokenDto.RefreshToken,
+                DeviceId = currentDeviceId
             };
 
             _refreshTokenRepository.Update(existingToken);

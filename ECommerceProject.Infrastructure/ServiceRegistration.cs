@@ -18,6 +18,7 @@ namespace ECommerceProject.Infrastructure
         {
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IAuthCookieService, AuthCookieService>();
 
             var masterKey = configuration["Jwt:EncryptionMasterKey"];
 
@@ -42,6 +43,25 @@ namespace ECommerceProject.Infrastructure
                     ValidAudiences = configuration.GetSection("CustomTokenOption:Audience").Get<string[]>(),
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(decryptedSecurityKey))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        // token içine claim olarak eklediğimiz DeviceId yi al
+                        var tokenDeviceId = context.Principal?.FindFirst("DeviceId")?.Value;
+
+                        // tarayıcının gönderdiği Httponly Cookie'yi oku
+                        var cookieDeviceId = context.Request.Cookies["X-Device-Id"];
+
+                        if(string.IsNullOrEmpty(tokenDeviceId) ||
+                            string.IsNullOrEmpty(cookieDeviceId) ||
+                            cookieDeviceId != tokenDeviceId)
+                        {
+                            context.Fail("Device Id uyuşmazlığı tespit edildi. Şüpheli işlem!!");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }

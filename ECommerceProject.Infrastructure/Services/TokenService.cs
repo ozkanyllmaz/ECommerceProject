@@ -25,14 +25,15 @@ namespace ECommerceProject.Infrastructure.Services
             _tokenOption = tokenOption;
         }
 
-        public TokenDto CreateAccessToken(User user, IList<string> roles)
+        public TokenDto CreateAccessToken(User user, IList<string> roles, string deviceId)
         {
             // Token'ın içine gömeceğimiz bilgiler.
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("DeviceId", deviceId)
             };
 
             if(roles != null)

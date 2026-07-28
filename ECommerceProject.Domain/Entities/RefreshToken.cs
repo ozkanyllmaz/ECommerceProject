@@ -26,6 +26,7 @@ namespace ECommerceProject.Domain.Entities
 
         // İptal edilme sebebi.
         public string? ReasonRevoked {  get; set; }
+        public string? DeviceId { get; set; }
 
         
         public bool IsExpired(DateTime currentTime) => currentTime >= ExpiresDate; // Token süresi doldu mu kontrol eder.

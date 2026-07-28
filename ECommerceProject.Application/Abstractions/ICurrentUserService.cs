@@ -9,5 +9,7 @@ namespace ECommerceProject.Application.Abstractions
         string? UserId { get; }
         string? Email { get; }
         bool IsAuthenticated { get; }
+        string? DeviceId { get; }
+        List<string> Roles { get; }
     }
 }

@@ -11,7 +11,7 @@ namespace ECommerceProject.Application.Abstractions
     public interface ITokenService
     {
         // Kullanıcı bilgilerini ve rollerini alıp JWT üretir.
-        TokenDto CreateAccessToken(User user, IList<string> roles);
+        TokenDto CreateAccessToken(User user, IList<string> roles, string deviceId);
 
         // RefreshToken
         string GenerateRefreshToken();

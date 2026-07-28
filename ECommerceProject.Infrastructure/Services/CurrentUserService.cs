@@ -19,5 +19,9 @@ namespace ECommerceProject.Infrastructure.Services
         public string? Email => _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value;
 
         public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+
+        public string? DeviceId => _httpContextAccessor.HttpContext?.Request.Cookies["X-Device-Id"];
+
+        public List<string> Roles => _httpContextAccessor.HttpContext?.User?.FindAll(ClaimTypes.Role).Select(x => x.Value).ToList() ?? new List<string>();
     }
 }
