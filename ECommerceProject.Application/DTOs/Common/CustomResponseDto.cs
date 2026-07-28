@@ -65,4 +65,45 @@ namespace ECommerceProject.Application.DTOs.Common
             };
         }
     }
+
+    // non-generic veri dönmeyen işlemleri için (Create, Update, Delete)
+    public class CustomResponseDto
+    {
+        public bool IsSuccessfull { get; set; }
+        public string Message { get; set; }
+        public List<string> Errors { get; set; }
+        [JsonIgnore]
+        public int StatusCode { get; set; }
+
+        public static CustomResponseDto Success(int statusCode, string message = null)
+        {
+            return new CustomResponseDto
+            {
+                IsSuccessfull = true,
+                Message = message,
+                StatusCode = statusCode
+            };
+        }
+
+        public static CustomResponseDto Fail(int statusCode, List<string> errors, string message = "İşlem sırasında hatalar oluştu")
+        {
+            return new CustomResponseDto
+            {
+                IsSuccessfull = false,
+                Message = message,
+                Errors = errors,
+                StatusCode = statusCode
+            };
+        }
+        public static CustomResponseDto Fail(int statusCode, string error, string message = "İşlem sırasında hata oluştu")
+        {
+            return new CustomResponseDto
+            {
+                IsSuccessfull = false,
+                Message = message,
+                Errors = new List<string> { error },
+                StatusCode = statusCode
+            };
+        }
+    }
 }
