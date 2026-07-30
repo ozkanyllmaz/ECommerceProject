@@ -46,6 +46,14 @@ namespace ECommerceProject.Infrastructure
                 };
                 options.Events = new JwtBearerEvents
                 {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["AccessToken"];
+                        if (!string.IsNullOrEmpty(token))
+                            context.Token = token;
+                        return Task.CompletedTask;
+                    },
+
                     OnTokenValidated = context =>
                     {
                         // token içine claim olarak eklediğimiz DeviceId yi al

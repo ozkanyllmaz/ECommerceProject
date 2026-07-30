@@ -15,6 +15,17 @@ namespace ECommerceProject.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public void deleteCookies(string cookieName)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            };
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete(cookieName, cookieOptions);
+        }
+
         public void setDeviceCookie(string deviceId)
         {
             var cookieOptions = new CookieOptions
