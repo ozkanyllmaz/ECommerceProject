@@ -21,8 +21,10 @@ namespace ECommerceProject.Application
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(assembly);
-                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                cfg.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                
             });
 
             // FluentValidation kaydı

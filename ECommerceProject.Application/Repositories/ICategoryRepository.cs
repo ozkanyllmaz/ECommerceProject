@@ -5,8 +5,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.Repositories
 {
-    public interface IProductRepository:IGenericRepository<Product>
+    public interface ICategoryRepository : IGenericRepository<Category>
     {
-        IQueryable<Product> GetProductByDeletedCategoryAsync(Guid categoryId);
     }
 }

@@ -8,5 +8,6 @@ namespace ECommerceProject.Application.Repositories
     public interface IRefreshTokenRepository:IGenericRepository<RefreshToken>
     {
         Task<RefreshToken?> GetTokenWithUserAsync(string refreshToken);
+        Task<RefreshToken?> DeleteTokenAsync(string userId);
     }
 }

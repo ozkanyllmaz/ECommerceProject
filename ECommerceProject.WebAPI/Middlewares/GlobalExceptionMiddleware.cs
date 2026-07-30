@@ -60,48 +60,53 @@ namespace ECommerceProject.WebAPI.Middlewares
                     title = "Kaynak Bulunamadı";
                     break;
 
+                case BadRequestException:
+                    statusCode = StatusCodes.Status400BadRequest;
+                    title = "İşlem başarısız";
+                    break;
+
                 case ArgumentNullException:
-                case ArgumentException:
-                    statusCode = StatusCodes.Status400BadRequest;
-                    title = "Geçersiz Argüman";
-                    break;
+                    case ArgumentException:
+                        statusCode = StatusCodes.Status400BadRequest;
+                        title = "Geçersiz Argüman";
+                        break;
 
-                case InvalidOperationException:
-                    statusCode = StatusCodes.Status409Conflict;
-                    title = "Geçersiz İşlem";
-                    break;
+                    case InvalidOperationException:
+                        statusCode = StatusCodes.Status409Conflict;
+                        title = "Geçersiz İşlem";
+                        break;
 
-                case UnauthorizedAccessException:
-                    statusCode = StatusCodes.Status401Unauthorized;
-                    title = "Yetkisiz İşlem";
-                    break;
+                    case UnauthorizedAccessException:
+                        statusCode = StatusCodes.Status401Unauthorized;
+                        title = "Yetkisiz İşlem";
+                        break;
 
-                case ValidationException validationException:
-                    statusCode = StatusCodes.Status400BadRequest;
-                    title = "Doğrulama Hataları";
-                    problemDetails.Status = statusCode;
-                    problemDetails.Title = "Doğrulama Hatası";
-                    problemDetails.Detail = exception.Message;// Handler'daki message
-                    problemDetails.Extensions.Add("errors", validationException.Errors);
-                    break;
+                    case ValidationException validationException:
+                        statusCode = StatusCodes.Status400BadRequest;
+                        title = "Doğrulama Hataları";
+                        problemDetails.Status = statusCode;
+                        problemDetails.Title = "Doğrulama Hatası";
+                        problemDetails.Detail = exception.Message;// Handler'daki message
+                        problemDetails.Extensions.Add("errors", validationException.Errors);
+                        break;
 
-                case AuthenticationException:
-                    statusCode = StatusCodes.Status401Unauthorized;
-                    title = "Giriş Başarısız";
-                    break;
+                    case AuthenticationException:
+                        statusCode = StatusCodes.Status401Unauthorized;
+                        title = "Giriş Başarısız";
+                        break;
 
-                case BusinessException:
-                    statusCode = StatusCodes.Status400BadRequest;
-                    title = "Giriş Başarısız";
-                    break;
+                    case BusinessException:
+                        statusCode = StatusCodes.Status400BadRequest;
+                        title = "Giriş Başarısız";
+                        break;
 
-                default:
-                    problemDetails.Status = statusCode;
-                    problemDetails.Title = title;
-                    problemDetails.Detail = exception.Message;
-                    break;
+                    default:
+                        problemDetails.Status = statusCode;
+                        problemDetails.Title = title;
+                        problemDetails.Detail = exception.Message;
+                        break;
 
-            }
+                    }
 
             //response ayarları
             context.Response.ContentType = "application/json";

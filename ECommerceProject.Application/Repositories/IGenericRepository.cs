@@ -19,12 +19,14 @@ namespace ECommerceProject.Application.Repositories
 
         //Yazma operasyonlarım.
         //ekleme işleminde Ef Core takip etmek zorundadır. default tracking true gelir yani
-        Task<bool> AddAsync(T model);
+        Task<bool> AddAsync(T model, CancellationToken cancellationToken = default);
         //500 tane veriyi aynı anda eklemek için AddRangeAsync metodu kullanılır.
         Task<bool> AddRangeAsync(List<T> datas);
         bool Remove(T model);
         bool Update(T model);
         bool Restore(T model);
+
+        void UpdateRange(IEnumerable<T> entities);
 
 
         //SaveAsync kullanmamızın sebebi Unit Of Work. yani işlerin tek bir transaction ile yapılması.
@@ -37,6 +39,12 @@ namespace ECommerceProject.Application.Repositories
 
         IQueryable<T> GetListAsQueryable(bool tracking = true);
         IQueryable<T> GetListWithFilterAsQueryable(Expression<Func<T, bool>> metod, bool tracking = true);
+
+        IQueryable<T> Where(Expression<Func<T, bool>> metod, bool tracking = true);
+
+        Task<T?> GetAsync(Expression<Func<T, bool>> metod, CancellationToken cancellationToken = default);
+
+        Task<List<TResult>> ToListAsync<TResult>(IQueryable<TResult> query, CancellationToken cancellationToken = default);
 
 
     }

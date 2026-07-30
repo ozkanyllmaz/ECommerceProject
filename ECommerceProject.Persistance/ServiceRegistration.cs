@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using ECommerceProject.Application.Repositories;
 using ECommerceProject.Persistance.Repositories;
+using ECommerceProject.Application.Abstractions.UnitOfWorks;
+using ECommerceProject.Persistance.UnitOfWorks;
 
 namespace ECommerceProject.Persistance
 {
@@ -23,6 +25,10 @@ namespace ECommerceProject.Persistance
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

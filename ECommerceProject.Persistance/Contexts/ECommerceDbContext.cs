@@ -25,6 +25,9 @@ namespace ECommerceProject.Persistance.Contexts
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,6 +36,7 @@ namespace ECommerceProject.Persistance.Contexts
 
             //Entity çağırıldığı zaman silinmişleri otomatik gizle
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
             modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
         }
 

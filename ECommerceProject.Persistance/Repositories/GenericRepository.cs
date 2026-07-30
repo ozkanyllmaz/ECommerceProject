@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ECommerceProject.Persistance.Repositories
 {
@@ -25,9 +26,9 @@ namespace ECommerceProject.Persistance.Repositories
         //Metotlarda .SaveChangesAsync() yok. Unit of Work gereği ekleme ile kaydetme birbirinden ayrılır.
         //Tüm işlemleri Ef Core hafızasında tutar ve await _productRepository.SaveAsync() ile hepsini kaydeder. Eğer hata olursa RollBack ile tüm işlemleri geri alır(Transaction).
 
-        public async Task<bool> AddAsync(T model)
+        public async Task<bool> AddAsync(T model, CancellationToken cancellationToken = default)
         {
-            EntityEntry<T> entityEntry = await _context.Set<T>().AddAsync(model);
+            EntityEntry<T> entityEntry = await _context.Set<T>().AddAsync(model, cancellationToken);
             return entityEntry.State == EntityState.Added;
         }
 
@@ -121,6 +122,26 @@ namespace ECommerceProject.Persistance.Repositories
             if (!tracking)
                 query = query.AsNoTracking();
             return query;
+        }
+
+        public IQueryable<T> Where(Expression<Func<T, bool>> metod, bool tracking = true)
+        {
+            return Table.Where(metod);
+        }
+
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> metod, CancellationToken cancellationToken = default)
+        {
+            return await Table.FirstOrDefaultAsync(metod, cancellationToken);
+        }
+
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            Table.UpdateRange(entities);
+        }
+
+        public async Task<List<TResult>> ToListAsync<TResult>(IQueryable<TResult> query, CancellationToken cancellationToken = default)
+        {
+            return await query.ToListAsync(cancellationToken);
         }
     }
 }

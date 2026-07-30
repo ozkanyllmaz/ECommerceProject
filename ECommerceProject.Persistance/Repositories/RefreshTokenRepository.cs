@@ -2,6 +2,7 @@
 using ECommerceProject.Domain.Entities;
 using ECommerceProject.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,16 @@ namespace ECommerceProject.Persistance.Repositories
     {
         public RefreshTokenRepository(ECommerceDbContext context) : base(context)
         {
+        }
+
+        public async Task<RefreshToken?> DeleteTokenAsync(string userId)
+        {
+            return await _context.RefreshTokens
+                .Include(u => u.User)
+                .Where(rt => rt.UserId == Guid.Parse(userId) && !rt.IsDeleted)
+                .OrderByDescending(rt => rt.CreatedDate)
+                .FirstOrDefaultAsync();
+
         }
 
         public async Task<RefreshToken?> GetTokenWithUserAsync(string token)
