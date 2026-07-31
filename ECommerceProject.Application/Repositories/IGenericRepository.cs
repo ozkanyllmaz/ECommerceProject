@@ -27,6 +27,7 @@ namespace ECommerceProject.Application.Repositories
         bool Restore(T model);
 
         void UpdateRange(IEnumerable<T> entities);
+        void RemoveRange(IEnumerable<T> entities);
 
 
         //SaveAsync kullanmamızın sebebi Unit Of Work. yani işlerin tek bir transaction ile yapılması.

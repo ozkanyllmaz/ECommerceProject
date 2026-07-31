@@ -143,5 +143,10 @@ namespace ECommerceProject.Persistance.Repositories
         {
             return await query.ToListAsync(cancellationToken);
         }
+
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            Table.RemoveRange(entities);
+        }
     }
 }

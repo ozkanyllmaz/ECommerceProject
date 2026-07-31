@@ -43,11 +43,7 @@ namespace ECommerceProject.Application.Features.ShoppingCarts.Commands.ClearShop
             if (cartItem == null || !cartItem.Any())
                 return CustomResponseDto.Success(200, "Sepet zaten boş");
 
-            foreach(var item in cartItem)
-            {
-                item.IsDeleted = true;
-            }
-            _shoppingCartItemRepository.UpdateRange(cartItem);
+            _shoppingCartItemRepository.RemoveRange(cartItem);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
