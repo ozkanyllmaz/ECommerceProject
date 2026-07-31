@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ECommerceProject.Application.Configurations
+namespace ECommerceProject.Infrastructure.Options
 {
     public class CustomTokenOption
     {
-        public List<string>? Audience {  get; set; } // kitle
+        public List<string>? Audience { get; set; } // kitle
         public string? Issuer { get; set; }
         public int AccessTokenExpiration { get; set; }
         public int RefreshTokenExpiration { get; set; }
@@ -14,3 +14,5 @@ namespace ECommerceProject.Application.Configurations
 
     }
 }
+
+

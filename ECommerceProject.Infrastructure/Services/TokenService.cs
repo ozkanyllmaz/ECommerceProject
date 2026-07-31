@@ -1,6 +1,5 @@
 ﻿using ECommerceProject.Application.Abstractions;
-using ECommerceProject.Application.Configurations;
-using ECommerceProject.Application.Configurations;
+using ECommerceProject.Infrastructure.Options;
 using ECommerceProject.Application.DTOs.Auth;
 using ECommerceProject.Application.Features.Auth.Commands.RefreshTokens;
 using ECommerceProject.Domain.Entities;

@@ -2,7 +2,7 @@ using ECommerceProject.Persistance;
 using ECommerceProject.Application;
 using ECommerceProject.Application.Mappings;
 using ECommerceProject.Infrastructure;
-using ECommerceProject.Application.Configurations;
+using ECommerceProject.Infrastructure.Options;
 using ECommerceProject.Infrastructure.Services;
 using ECommerceProject.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;

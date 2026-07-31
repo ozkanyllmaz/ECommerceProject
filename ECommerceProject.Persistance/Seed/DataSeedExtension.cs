@@ -70,7 +70,7 @@ namespace ECommerceProject.Persistance.Seed
             }
             catch (Exception ex)
             {
-                throw new NotFoundException("Seed eklenirken hata oluştu");
+                throw;
             }
 
 
