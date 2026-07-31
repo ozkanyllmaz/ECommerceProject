@@ -28,6 +28,8 @@ namespace ECommerceProject.Persistance.Contexts
         public DbSet<Category> Categories { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems {  get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,9 +37,20 @@ namespace ECommerceProject.Persistance.Contexts
             base.OnModelCreating(modelBuilder);
 
             //Entity çağırıldığı zaman silinmişleri otomatik gizle
+            modelBuilder.Entity<ShoppingCart>().HasQueryFilter(sc => !sc.IsDeleted);
+            modelBuilder.Entity<ShoppingCartItem>().HasQueryFilter(sc => !sc.IsDeleted);
+
+            modelBuilder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
+            modelBuilder.Entity<OrderItem>().HasQueryFilter(o => !o.IsDeleted);
+
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
             modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
+
             modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<OrderItem>().Property(oi => oi.UnitPrice).HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<OrderItem>().Property(oi => oi.TotalPrice).HasColumnType("decimal(18,2)");
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ECommerceDbContext).Assembly);
         }
 
         //Ekleme ve güncelleme işlemlerinde CreatedDate ve UpdatedDate otomatik olarak ayarlanacak. 

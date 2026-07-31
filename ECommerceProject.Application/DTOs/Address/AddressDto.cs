@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ECommerceProject.Application.DTOs.Address
+{
+    public class AddressDto
+    {
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
+        public string City { get; set; } = null!;
+        public string District { get; set; } = null!;
+        public string FullAddress { get; set; } = null!;
+
+        public string InvoiceType { get; set; } = null!;
+        public string? CompanyName { get; set; }
+        public string? TaxNumber { get; set; }
+        public string? TaxOffice { get; set; }
+    }
+}

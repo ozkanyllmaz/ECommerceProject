@@ -29,6 +29,8 @@ namespace ECommerceProject.Persistance
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
         }
     }
 }

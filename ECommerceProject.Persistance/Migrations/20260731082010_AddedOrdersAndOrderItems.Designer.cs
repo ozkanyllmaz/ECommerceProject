@@ -4,6 +4,7 @@ using ECommerceProject.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceProject.Persistance.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
-    partial class ECommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260731082010_AddedOrdersAndOrderItems")]
+    partial class AddedOrdersAndOrderItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,6 +71,10 @@ namespace ECommerceProject.Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -399,155 +406,6 @@ namespace ECommerceProject.Persistance.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("ECommerceProject.Domain.Entities.Order", b =>
-                {
-                    b.OwnsOne("ECommerceProject.Domain.Entities.ValueObjects.Address", "BillingAddress", b1 =>
-                        {
-                            b1.Property<Guid>("OrderId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Billing_City");
-
-                            b1.Property<string>("CompanyName")
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Billing_CompanyName");
-
-                            b1.Property<string>("District")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Billing_District");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Billing_FirstName");
-
-                            b1.Property<string>("FullAddress")
-                                .IsRequired()
-                                .HasMaxLength(500)
-                                .HasColumnType("nvarchar(500)")
-                                .HasColumnName("Billing_FullAddress");
-
-                            b1.Property<string>("InvoiceType")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("Billing_InvoiceType");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Billing_LastName");
-
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("Billing_PhoneNumber");
-
-                            b1.Property<string>("TaxNumber")
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Billing_TaxNumber");
-
-                            b1.Property<string>("TaxOffice")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("Billing_TaxOffice");
-
-                            b1.HasKey("OrderId");
-
-                            b1.ToTable("Orders");
-
-                            b1.WithOwner()
-                                .HasForeignKey("OrderId");
-                        });
-
-                    b.OwnsOne("ECommerceProject.Domain.Entities.ValueObjects.Address", "ShippingAddress", b1 =>
-                        {
-                            b1.Property<Guid>("OrderId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Shipping_City");
-
-                            b1.Property<string>("CompanyName")
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Shipping_CompanyName");
-
-                            b1.Property<string>("District")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Shipping_District");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Shipping_FirstName");
-
-                            b1.Property<string>("FullAddress")
-                                .IsRequired()
-                                .HasMaxLength(500)
-                                .HasColumnType("nvarchar(500)")
-                                .HasColumnName("Shipping_FullAddress");
-
-                            b1.Property<string>("InvoiceType")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("Shipping_InvoiceType");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Shipping_LastName");
-
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("Shipping_PhoneNumber");
-
-                            b1.Property<string>("TaxNumber")
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Shipping_TaxNumber");
-
-                            b1.Property<string>("TaxOffice")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("Shipping_TaxOffice");
-
-                            b1.HasKey("OrderId");
-
-                            b1.ToTable("Orders");
-
-                            b1.WithOwner()
-                                .HasForeignKey("OrderId");
-                        });
-
-                    b.Navigation("BillingAddress")
-                        .IsRequired();
-
-                    b.Navigation("ShippingAddress")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ECommerceProject.Domain.Entities.OrderItem", b =>

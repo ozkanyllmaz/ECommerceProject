@@ -8,5 +8,6 @@ namespace ECommerceProject.Application.Repositories
     public interface IProductRepository:IGenericRepository<Product>
     {
         IQueryable<Product> GetProductByDeletedCategoryAsync(Guid categoryId);
+        Task<List<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds);
     }
 }

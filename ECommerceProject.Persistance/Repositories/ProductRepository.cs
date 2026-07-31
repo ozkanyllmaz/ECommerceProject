@@ -23,5 +23,13 @@ namespace ECommerceProject.Persistance.Repositories
                 .Where(x => x.Category != null && x.Category.IsDeleted == true)
                 .AsNoTracking();
         }
+
+
+        public async Task<List<Product>> GetProductsByIdsAsync(IEnumerable<Guid> productIds)
+        {
+            return await _context.Products
+                .Where(p => productIds.Contains(p.Id))
+                .ToListAsync();
+        }
     }
 }
