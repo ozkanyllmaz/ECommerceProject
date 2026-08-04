@@ -35,7 +35,10 @@ namespace ECommerceProject.Persistance.Seed
                     await context.SaveChangesAsync();
                 }
                 const string adminEmail = "dev.ozkanyilmaz@gmail.com";
+                const string managerEmail = "ozkanyilmaz.dev@gmail.com";
+                const string customerEmail = "deneme123.dev@gmail.com";
 
+                // Admin
                 if (!await context.Users.AnyAsync(u => u.Email == adminEmail))
                 {
                     HashingHelper.CreatePasswordHash("Ozkan123*", out byte[] passwordHash, out byte[] passwordSalt);
@@ -62,6 +65,71 @@ namespace ECommerceProject.Persistance.Seed
                         {
                             UserId = adminUser.Id,
                             RoleId = adminRole.Id,
+                        };
+                        await context.UserRoles.AddAsync(userRole);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                // Manager
+                if (!await context.Users.AnyAsync(u => u.Email == managerEmail))
+                {
+                    HashingHelper.CreatePasswordHash("Ozkan123*", out byte[] passwordHash, out byte[] passwordSalt);
+
+                    var managerUser = new User
+                    {
+                        Id = Guid.NewGuid(),
+                        Email = managerEmail,
+                        FirstName = "System",
+                        LastName = "Manager",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        Status = true
+                    };
+                    await context.Users.AddAsync(managerUser);
+                    await context.SaveChangesAsync();
+
+                    // Manager kullanıcısına Manager rolu atama
+                    var managerRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Manager");
+
+                    if (managerRole != null)
+                    {
+                        var userRole = new UserRole
+                        {
+                            UserId = managerUser.Id,
+                            RoleId = managerRole.Id,
+                        };
+                        await context.UserRoles.AddAsync(userRole);
+                        await context.SaveChangesAsync();
+                    }
+                }
+
+                //Customer
+                if (!await context.Users.AnyAsync(u => u.Email == customerEmail))
+                {
+                    HashingHelper.CreatePasswordHash("Ozkan123*", out byte[] passwordHash, out byte[] passwordSalt);
+
+                    var customerUser = new User
+                    {
+                        Id = Guid.NewGuid(),
+                        Email = customerEmail,
+                        FirstName = "System",
+                        LastName = "Customer",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        Status = true
+                    };
+                    await context.Users.AddAsync(customerUser);
+                    await context.SaveChangesAsync();
+
+                    // Manager kullanıcısına customer rolu atama
+                    var customerRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Customer");
+
+                    if (customerRole != null)
+                    {
+                        var userRole = new UserRole
+                        {
+                            UserId = customerUser.Id,
+                            RoleId = customerRole.Id,
                         };
                         await context.UserRoles.AddAsync(userRole);
                         await context.SaveChangesAsync();
