@@ -31,6 +31,9 @@ namespace ECommerceProject.Persistance
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            services.AddScoped<IExceptionLogRepository, ExceptionLogRepository>();
+            services.AddScoped<IRequestLogRepository, RequestLogRepository>();
+            services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         }
     }
 }

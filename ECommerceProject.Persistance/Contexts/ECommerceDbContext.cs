@@ -1,6 +1,7 @@
 ﻿using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Domain.Entities;
 using ECommerceProject.Domain.Entities.Common;
+using ECommerceProject.Domain.Entities.LogEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,9 @@ namespace ECommerceProject.Persistance.Contexts
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems {  get; set; }
+        public DbSet<ExceptionLog> ExceptionLogs { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<RequestLog> RequestLogs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,13 +48,26 @@ namespace ECommerceProject.Persistance.Contexts
             modelBuilder.Entity<OrderItem>().HasQueryFilter(o => !o.IsDeleted);
 
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+
             modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
+
+            modelBuilder.Entity<RefreshToken>().HasQueryFilter(r => !r.IsDeleted);
 
             modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
             modelBuilder.Entity<OrderItem>().Property(oi => oi.UnitPrice).HasColumnType("decimal(18,2)");
             modelBuilder.Entity<OrderItem>().Property(oi => oi.TotalPrice).HasColumnType("decimal(18,2)");
 
+            modelBuilder.Entity<ExceptionLog>().ToTable("ExceptionLogs");
+            modelBuilder.Entity<ExceptionLog>().HasKey(e => e.Id);
+
+            modelBuilder.Entity<AuditLog>().ToTable("AuditLogs");
+            modelBuilder.Entity<AuditLog>().HasKey(a => a.Id);
+
+            modelBuilder.Entity<RequestLog>().ToTable("RequestLogs");
+            modelBuilder.Entity<RequestLog>().HasKey(r => r.Id);
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ECommerceDbContext).Assembly);
+
         }
 
         //Ekleme ve güncelleme işlemlerinde CreatedDate ve UpdatedDate otomatik olarak ayarlanacak. 
