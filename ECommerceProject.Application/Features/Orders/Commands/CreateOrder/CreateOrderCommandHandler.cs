@@ -112,6 +112,7 @@ namespace ECommerceProject.Application.Features.Orders.Commands.CreateOrder
                 TaxNumber = request.BillingAddress.TaxNumber,
             };
 
+            // Stok güncelleme
             foreach (var orderItem in orderItems)
             {
                 var product = productsList.FirstOrDefault(x => x.Id == orderItem.ProductId);

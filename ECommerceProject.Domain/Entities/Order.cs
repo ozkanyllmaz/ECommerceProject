@@ -18,6 +18,9 @@ namespace ECommerceProject.Domain.Entities
         public Address ShippingAddress { get; set; } = null!;
         public Address BillingAddress { get; set; } = null!;
 
+        public string? CancellationReason { get; set; }
+        public DateTime? CancelledDate { get; set; }
+
 
         public ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();
 
