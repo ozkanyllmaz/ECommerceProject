@@ -45,7 +45,7 @@ namespace ECommerceProject.WebAPI.Logging
                         sinkOptions: new MSSqlServerSinkOptions
                         {
                             TableName = "RequestLogs",
-                            AutoCreateSqlTable = true
+                            AutoCreateSqlTable = false
                         },
                         columnOptions: columnOptions))
 
@@ -56,7 +56,7 @@ namespace ECommerceProject.WebAPI.Logging
                         sinkOptions: new MSSqlServerSinkOptions
                         {
                             TableName = "ExceptionLogs",
-                            AutoCreateSqlTable = true,
+                            AutoCreateSqlTable = false,
                         },
                         columnOptions: columnOptions))
 
@@ -67,7 +67,7 @@ namespace ECommerceProject.WebAPI.Logging
                         sinkOptions: new MSSqlServerSinkOptions
                         {
                             TableName = "AuditLogs",
-                            AutoCreateSqlTable = true
+                            AutoCreateSqlTable = false
                         }))
 
                 .CreateLogger();

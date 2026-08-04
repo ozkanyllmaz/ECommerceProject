@@ -8,14 +8,15 @@ namespace ECommerceProject.Domain.Entities
     public class RefreshToken : BaseEntity
     {
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        public User User { get; set; } = null!;
 
+        public string AccessToken { get; set; } = null!;
+        public string Token { get; set; } = null!;
 
-        public string Token { get; set; }
         public DateTime ExpiresDate { get; set; }
 
         // Hangi Ip den oluşturuldu (güvenlik ve loglama)
-        public string CreatedByIp { get; set; }
+        public string CreatedByIp { get; set; } = null!;
 
         // Token'ı manuel iptal etmek(çıkış yapma)
         public DateTime? RevokedDate { get; set; }

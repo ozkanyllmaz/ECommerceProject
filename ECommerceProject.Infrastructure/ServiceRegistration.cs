@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ECommerceProject.Application.Security.Hashing;
+using ECommerceProject.Application.Repositories;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ECommerceProject.Infrastructure
 {
@@ -18,7 +20,6 @@ namespace ECommerceProject.Infrastructure
         {
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            services.AddScoped<IAuthCookieService, AuthCookieService>();
 
             var masterKey = configuration["Jwt:EncryptionMasterKey"];
 
@@ -29,9 +30,11 @@ namespace ECommerceProject.Infrastructure
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
+                options.IncludeErrorDetails = true;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -46,29 +49,32 @@ namespace ECommerceProject.Infrastructure
                 };
                 options.Events = new JwtBearerEvents
                 {
-                    OnMessageReceived = context =>
+                    OnAuthenticationFailed = context =>
                     {
-                        var token = context.Request.Cookies["AccessToken"];
-                        if (!string.IsNullOrEmpty(token))
-                            context.Token = token;
+                        var errorMessage = context.Exception.Message;
                         return Task.CompletedTask;
                     },
-
-                    OnTokenValidated = context =>
+                    OnTokenValidated = async context =>
                     {
-                        // token içine claim olarak eklediğimiz DeviceId yi al
-                        var tokenDeviceId = context.Principal?.FindFirst("DeviceId")?.Value;
+                        var refreshTokenRepository = context.HttpContext.RequestServices.GetRequiredService<IRefreshTokenRepository>();
 
-                        // tarayıcının gönderdiği Httponly Cookie'yi oku
-                        var cookieDeviceId = context.Request.Cookies["X-Device-Id"];
-
-                        if(string.IsNullOrEmpty(tokenDeviceId) ||
-                            string.IsNullOrEmpty(cookieDeviceId) ||
-                            cookieDeviceId != tokenDeviceId)
+                        string? tokenString = context.SecurityToken switch
                         {
-                            context.Fail("Device Id uyuşmazlığı tespit edildi. Şüpheli işlem!!");
+                            Microsoft.IdentityModel.JsonWebTokens.JsonWebToken jsonWebToken => jsonWebToken.EncodedToken,
+                            _ => null
+                        };
+
+                        if(string.IsNullOrEmpty(tokenString))
+                        {
+                            context.Fail("Token string değeri bellekten okunamadı");
+                            return;
                         }
-                        return Task.CompletedTask;
+
+                        var existingSession = await refreshTokenRepository.GetAccessTokenWithUserAsync(tokenString);
+                        if (existingSession == null || !existingSession.IsActive(DateTime.UtcNow))
+                        {
+                            context.Fail("Oturum sonlandırılmış veya geçersiz token");
+                        }
                     }
                 };
             });

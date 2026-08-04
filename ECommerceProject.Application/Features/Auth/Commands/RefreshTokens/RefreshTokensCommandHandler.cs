@@ -27,35 +27,33 @@ namespace ECommerceProject.Application.Features.Auth.Commands.RefreshTokens
 
         public async Task<CustomResponseDto<RefreshTokensCommandResponse>> Handle(RefreshTokensCommandRequest request, CancellationToken cancellationToken)
         {
-            var existingToken = await _refreshTokenRepository.GetTokenWithUserAsync(request.RefreshToken);
+            var deviceId = _currentUserService.DeviceId;
+            if (string.IsNullOrEmpty(deviceId))
+                throw new NotFoundException("Cihaz kimliği bulunamadı"); 
+
+            var existingToken = await _refreshTokenRepository.GetRefreshTokenWithRefreshTokenAndDeviceId(request.RefreshToken, deviceId);
             if (existingToken == null)
                 throw new NotFoundException("Token bulunamadı");
             if (!existingToken.IsActive(DateTime.UtcNow))
                 throw new AuthenticationException("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
 
-            string currentDeviceId = _currentUserService.DeviceId!;
-            if (string.IsNullOrEmpty(_currentUserService.DeviceId))
-                throw new UnauthorizedAccessException("Cihaz kimliği bulunamadı");
-
             existingToken.RevokedDate = DateTime.UtcNow;
             existingToken.ReasonRevoked = "Yeni token ile değiştirildi.";
 
-            if(existingToken == null || existingToken.DeviceId != currentDeviceId)
-            {
-                throw new UnauthorizedAccessException("DeviceId uyuşmuyor. Şüpheli işlem!!");
-            }
+            var createByIp = _currentUserService.CreatedById ?? "Unknown";
 
             var roles = await _userRepository.GetRolesByUserIdAsync(existingToken.UserId);
-            var newTokenDto = _tokenService.CreateAccessToken(existingToken.User, roles, currentDeviceId);
+            var newTokenDto = _tokenService.CreateAccessToken(existingToken.User, roles, deviceId);
 
             var newRefreshToken = new RefreshToken
             {
                 UserId = existingToken.UserId,
                 Token = newTokenDto.RefreshToken,
+                AccessToken = newTokenDto.AccessToken,
                 ExpiresDate = newTokenDto.AccessTokenExpiration.AddDays(7),
-                CreatedByIp = "Unknown",
+                CreatedByIp = createByIp,
                 ReplacedByToken = newTokenDto.RefreshToken,
-                DeviceId = currentDeviceId
+                DeviceId = deviceId
             };
 
             _refreshTokenRepository.Update(existingToken);

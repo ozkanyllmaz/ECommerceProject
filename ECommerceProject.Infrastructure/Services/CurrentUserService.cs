@@ -20,8 +20,10 @@ namespace ECommerceProject.Infrastructure.Services
 
         public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
 
-        public string? DeviceId => _httpContextAccessor.HttpContext?.Request.Cookies["X-Device-Id"];
+        public string? DeviceId => _httpContextAccessor.HttpContext?.User?.FindFirst("DeviceId")?.Value;
 
         public List<string> Roles => _httpContextAccessor.HttpContext?.User?.FindAll(ClaimTypes.Role).Select(x => x.Value).ToList() ?? new List<string>();
+
+        public string? CreatedById => _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
     }
 }

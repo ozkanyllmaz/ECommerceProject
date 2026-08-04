@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ECommerceProject.Application.Abstractions.UnitOfWorks;
 
 namespace ECommerceProject.Application.Features.Auth.Commands.Logout
 {
@@ -14,29 +15,28 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Logout
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly IAuthCookieService _authCookieService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository, ICurrentUserService currentUserService, IAuthCookieService authCookieService)
+        public LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _refreshTokenRepository = refreshTokenRepository;
             _currentUserService = currentUserService;
-            _authCookieService = authCookieService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CustomResponseDto> Handle(LogoutCommandRequest request, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.UserId;
-            if (userId == null)
+            var deviceId = _currentUserService.DeviceId;
+            if (userId == null || deviceId == null)
                 throw new NotFoundException("Kullanıcı bulunamadı");
 
-            var refreshToken = await _refreshTokenRepository.DeleteTokenAsync(userId);
+            var refreshToken = await _refreshTokenRepository.GetTokenByUserIdAndDeviceAsync(userId, deviceId);
             if (refreshToken == null)
                 throw new NotFoundException("refreshToken bulunamadı");
 
             _refreshTokenRepository.Remove(refreshToken);
-            await _refreshTokenRepository.SaveAsync();
-
-            _authCookieService.deleteCookies("X-Device-Id");
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return CustomResponseDto.Success(200, "Sistemden çıkış yapıldı");
         }

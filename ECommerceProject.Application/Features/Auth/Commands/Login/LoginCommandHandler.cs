@@ -17,14 +17,14 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly IAuthCookieService _authCookieService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public LoginCommandHandler(IUserRepository userRepository, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository, IAuthCookieService authCookieService)
+        public LoginCommandHandler(IUserRepository userRepository, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository, ICurrentUserService currentUserService)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _refreshTokenRepository = refreshTokenRepository;
-            _authCookieService = authCookieService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<CustomResponseDto<LoginCommandResponse>> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
@@ -38,6 +38,7 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
 
             // Token güvenliği için deviceId
             string deviceId = Guid.NewGuid().ToString();
+            string createdByIp = _currentUserService.CreatedById ?? "Unknown";
 
             var roles = await _userRepository.GetRolesByUserIdAsync(user.Id);
             var tokenDto = _tokenService.CreateAccessToken(user, roles, deviceId);
@@ -45,14 +46,12 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
             var refreshToken = new RefreshToken
             {
                 UserId = user.Id,
+                AccessToken = tokenDto.AccessToken,
                 Token = tokenDto.RefreshToken,
                 ExpiresDate = tokenDto.AccessTokenExpiration.AddDays(7),
                 DeviceId = deviceId,
-                CreatedByIp = "Unknown"
+                CreatedByIp = createdByIp
             };
-
-            // Ürettiğim deviceId yi HttpOnly Cookie olarak tarayıcıya fırlat. (sonrasında doğrulama için)
-            _authCookieService.setDeviceCookie(deviceId);
 
             await _refreshTokenRepository.AddAsync(refreshToken);
             await _refreshTokenRepository.SaveAsync();
