@@ -7,10 +7,9 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.ShoppingCarts.Commands.AddItemToShoppingCart
 {
-    public class AddItemToShoppingCartCommandRequest : IRequest<CustomResponseDto>, ISecuredRequest
+    public class AddItemToShoppingCartCommandRequest : IRequest<CustomResponseDto>
     {
         public string ProductId { get; set; } = null!;
         public int Quantity { get; set; } = 0!;
-        public string[] Roles => ["Admin", "Manager", "Customer"];
     }
 }

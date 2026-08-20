@@ -7,9 +7,8 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.ShoppingCarts.Commands.DeleteItemInShoppingCart
 {
-    public class DeleteItemInShoppingCartCommandRequest : IRequest<CustomResponseDto>, ISecuredRequest
+    public class DeleteItemInShoppingCartCommandRequest : IRequest<CustomResponseDto>
     {
         public string ProductId { get; set; } = null!;
-        public string[] Roles => ["Admin", "Manager", "Customer"];
     }
 }

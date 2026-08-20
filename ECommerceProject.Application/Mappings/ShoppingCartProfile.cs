@@ -13,7 +13,7 @@ namespace ECommerceProject.Application.Mappings
         {
             CreateMap<ShoppingCartItem, ListItemInShoppingCartQueryResponse>()
                 // Sepet satırının kimlik eşleştirmesi
-                .ForMember(dest => dest.CarItemId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.CartItemId, opt => opt.MapFrom(src => src.Id))
                 // product detaylarının eşleştirilmesi
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Product.Stock))

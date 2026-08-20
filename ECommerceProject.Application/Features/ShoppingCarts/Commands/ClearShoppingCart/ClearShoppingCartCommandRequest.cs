@@ -7,8 +7,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.ShoppingCarts.Commands.ClearShoppingCart
 {
-    public class ClearShoppingCartCommandRequest : IRequest<CustomResponseDto>, ISecuredRequest
+    public class ClearShoppingCartCommandRequest : IRequest<CustomResponseDto>
     {
-        public string[] Roles => ["Admin", "Manager", "Customer"];
     }
 }

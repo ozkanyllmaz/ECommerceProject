@@ -7,10 +7,9 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.ShoppingCarts.Commands.UpdateItemInShoppingCart
 {
-    public class UpdateShoppingCartItemQuantityCommandRequest : IRequest<CustomResponseDto>, ISecuredRequest
+    public class UpdateShoppingCartItemQuantityCommandRequest : IRequest<CustomResponseDto>
     {
         public int Quantity { get; set; }
         public string ProductId { get; set; } = null!;
-        public string[] Roles => ["Admin", "Manager", "Customer"];
     }
 }

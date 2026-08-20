@@ -4,12 +4,14 @@ using ECommerceProject.Application.Features.ShoppingCarts.Commands.DeleteItemInS
 using ECommerceProject.Application.Features.ShoppingCarts.Commands.UpdateItemInShoppingCart;
 using ECommerceProject.Application.Features.ShoppingCarts.Queries.GetShoppingCartSummary;
 using ECommerceProject.Application.Features.ShoppingCarts.Queries.ListItemInShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
+    [AllowAnonymous]
     [ApiController]
     public class ShoppingCartsController : CustomBaseController
     {

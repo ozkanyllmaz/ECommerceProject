@@ -49,7 +49,14 @@ namespace ECommerceProject.Application.Features.ShoppingCarts.Queries.GetShoppin
             var cartItems = await _shoppingCartItemRespository.ToListAsync(query, cancellationToken);
 
             if (cartItems.Count <= 0 || !cartItems.Any())
-                return CustomResponseDto<GetShoppingCartSummaryQueryResponse>.Success(200, "Sepet boş");
+            {
+                var responseNull = new GetShoppingCartSummaryQueryResponse
+                {
+                    CartItems = cartItems
+                };
+                return CustomResponseDto<GetShoppingCartSummaryQueryResponse>.Success(200, responseNull, "Sepet boş");
+            }
+                
 
             var response = new GetShoppingCartSummaryQueryResponse
             {
@@ -58,9 +65,9 @@ namespace ECommerceProject.Application.Features.ShoppingCarts.Queries.GetShoppin
 
             response.SubTotal = cartItems.Sum(x => x.Price * x.Quantity);
 
-            response.TaxAmount = response.SubTotal * 0.2m; // sabit bir kdv oranı 
+            response.TaxAmount = response.SubTotal * 0.1m; // sabit bir kdv oranı 
 
-            response.ShippingCost = response.SubTotal >= 1500m ? 0m : 500m;
+            response.ShippingCost = response.SubTotal >= 1500m ? 0m : 149.90m;
 
             response.TotalPrice = response.SubTotal + response.TaxAmount + response.ShippingCost;
 

@@ -13,6 +13,6 @@ namespace ECommerceProject.Application.Features.ShoppingCarts.Queries.ListItemIn
         public int Stock { get; set; }
         public string? ImageUrl { get; set; }
         public string ProductId { get; set; } = null!;
-        public string CarItemId { get; set; } = null!;
+        public string CartItemId { get; set; } = null!;
     }
 }
