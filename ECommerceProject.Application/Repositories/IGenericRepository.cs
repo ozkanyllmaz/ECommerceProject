@@ -46,6 +46,7 @@ namespace ECommerceProject.Application.Repositories
         Task<T?> GetAsync(Expression<Func<T, bool>> metod, CancellationToken cancellationToken = default);
 
         Task<List<TResult>> ToListAsync<TResult>(IQueryable<TResult> query, CancellationToken cancellationToken = default);
+        Task<TResult?> FirstOrDefaultAsync<TResult>(IQueryable<TResult> query, CancellationToken cancellationToken = default);
 
 
     }

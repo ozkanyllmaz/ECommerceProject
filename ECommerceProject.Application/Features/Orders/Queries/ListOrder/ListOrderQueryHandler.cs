@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using ECommerceProject.Application.Abstractions;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Exceptions;
+using ECommerceProject.Application.Extensions;
 using ECommerceProject.Application.Repositories;
 using MediatR;
 using System;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Orders.Queries.ListOrder
 {
-    internal class ListOrderQueryHandler : IRequestHandler<ListOrderQueryRequest, CustomResponseDto<List<ListOrderQueryResponse>>>
+    internal class ListOrderQueryHandler : IRequestHandler<ListOrderQueryRequest, CustomResponseDto<PaginationResult<ListOrderQueryResponse>>>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IOrderRepository _orderRepository;
@@ -24,18 +25,19 @@ namespace ECommerceProject.Application.Features.Orders.Queries.ListOrder
             _mapper = mapper;
         }
 
-        public async Task<CustomResponseDto<List<ListOrderQueryResponse>>> Handle(ListOrderQueryRequest request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<PaginationResult<ListOrderQueryResponse>>> Handle(ListOrderQueryRequest request, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.UserId;
             if (string.IsNullOrEmpty(userId))
                 throw new NotFoundException("Login olan kullanıcı bulunamadı");
 
-            var query = _orderRepository.GetListWithFilterAsQueryable(x => x.UserId == Guid.Parse(userId))
-                .ProjectTo<ListOrderQueryResponse>(_mapper.ConfigurationProvider);
+            var orderItems = await _orderRepository.GetListWithFilterAsQueryable(x => x.UserId == Guid.Parse(userId))
+                .ProjectTo<ListOrderQueryResponse>(_mapper.ConfigurationProvider)
+                .ToPaginatedResultAsync(request.paginationParameter, cancellationToken);
 
-            var orderItems = await _orderRepository.ToListAsync(query, cancellationToken);
+            //var orderItems = await _orderRepository.ToListAsync(query, cancellationToken);
 
-            return CustomResponseDto<List<ListOrderQueryResponse>>.Success(200, orderItems, "Siparişler başarıyla getirildi");
+            return CustomResponseDto<PaginationResult<ListOrderQueryResponse>>.Success(200, orderItems, "Siparişler başarıyla getirildi");
         }
     }
 }

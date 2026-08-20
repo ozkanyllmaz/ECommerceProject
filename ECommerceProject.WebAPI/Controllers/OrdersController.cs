@@ -4,6 +4,7 @@ using ECommerceProject.Application.Features.Orders.Commands.CreateOrder;
 using ECommerceProject.Application.Features.Orders.Commands.DeleteOrder;
 using ECommerceProject.Application.Features.Orders.Commands.RejectOrderByAdmin;
 using ECommerceProject.Application.Features.Orders.Commands.SoftDeleteOrder;
+using ECommerceProject.Application.Features.Orders.Queries.ListAllOrder;
 using ECommerceProject.Application.Features.Orders.Queries.ListOrder;
 using ECommerceProject.Application.Features.Orders.Queries.ListOrderByAdmin;
 using ECommerceProject.Application.Features.Orders.Queries.ListOrderByManager;
@@ -55,6 +56,10 @@ namespace ECommerceProject.WebAPI.Controllers
 
         [HttpPut]
         public async Task<IActionResult> RejectOrderByAdmin([FromQuery] RejectOrderByAdminCommandRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
+
+        [HttpGet]
+        public async Task<IActionResult> ListAllOrders([FromQuery] ListAllOrderQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
     }
 }

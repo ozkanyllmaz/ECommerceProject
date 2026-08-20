@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerceProject.Application.DTOs.Address;
 using ECommerceProject.Application.DTOs.OrderItem;
+using ECommerceProject.Application.Features.Orders.Queries.ListAllOrder;
 using ECommerceProject.Application.Features.Orders.Queries.ListOrder;
 using ECommerceProject.Application.Features.Orders.Queries.ListOrderByAdmin;
 using ECommerceProject.Application.Features.Orders.Queries.ListOrderByManager;
@@ -27,7 +28,7 @@ namespace ECommerceProject.Application.Mappings
             CreateMap<OrderItem, OrderItemDto>();
 
             CreateMap<Order, ListOrderDetailQueryResponse>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
 
             CreateMap<Order, ListOrderByManagerQueryResponse>()
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
@@ -35,6 +36,10 @@ namespace ECommerceProject.Application.Mappings
 
             CreateMap<Order, ListOrderByAdminQueryResponse>()
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.TotalItemCount, opt => opt.MapFrom(src => src.OrderItems.Count));
+
+            CreateMap<Order, ListAllOrderQueryResponse>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.TotalItemCount, opt => opt.MapFrom(src => src.OrderItems.Count));
         }
     }

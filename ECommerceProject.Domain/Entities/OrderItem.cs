@@ -15,5 +15,6 @@ namespace ECommerceProject.Domain.Entities
         public decimal TotalPrice { get; set; }
 
         public Order Order { get; set; } = null!;
+        public Product Product { get; set; } = null!;
     }
 }

@@ -53,6 +53,9 @@ namespace ECommerceProject.Persistance.Contexts
 
             modelBuilder.Entity<RefreshToken>().HasQueryFilter(r => !r.IsDeleted);
 
+            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<UserRole>().HasQueryFilter(ur => !ur.IsDeleted);
+
             modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
             modelBuilder.Entity<OrderItem>().Property(oi => oi.UnitPrice).HasColumnType("decimal(18,2)");
             modelBuilder.Entity<OrderItem>().Property(oi => oi.TotalPrice).HasColumnType("decimal(18,2)");

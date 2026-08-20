@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ECommerceProject.Application.Features.Orders.Queries.ListOrder
+namespace ECommerceProject.Application.Features.Orders.Queries.ListAllOrder
 {
-    public class ListOrderQueryRequest : IRequest<CustomResponseDto<PaginationResult<ListOrderQueryResponse>>>, ISecuredRequest
+    public class ListAllOrderQueryRequest : IRequest<CustomResponseDto<PaginationResult<ListAllOrderQueryResponse>>>, ISecuredRequest
     {
         public PaginationParameter paginationParameter { get; set; } = null!;
-        public string[] Roles => ["Admin", "Manager", "Customer"];
+        public string[] Roles => ["Admin", "Manager"];
     }
 }

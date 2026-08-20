@@ -7,5 +7,8 @@ namespace ECommerceProject.Application.Repositories
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {
+        Task<int> GetTotalOrderCount();
+
+        Task<decimal> GetTotalRevenue();
     }
 }

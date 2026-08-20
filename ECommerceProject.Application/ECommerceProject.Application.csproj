@@ -21,8 +21,6 @@
   <ItemGroup>
     <Folder Include="Features\Auth\Queries\" />
     <Folder Include="Features\LogDb\Commands\" />
-    <Folder Include="Features\Roles\Queries\" />
-    <Folder Include="Features\Users\Queries\" />
   </ItemGroup>
 
 </Project>

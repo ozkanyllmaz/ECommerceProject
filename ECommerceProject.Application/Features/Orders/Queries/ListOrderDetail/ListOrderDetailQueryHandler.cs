@@ -25,6 +25,9 @@ namespace ECommerceProject.Application.Features.Orders.Queries.ListOrderDetail
 
         public async Task<CustomResponseDto<List<ListOrderDetailQueryResponse>>> Handle(ListOrderDetailQueryRequest request, CancellationToken cancellationToken)
         {
+            if (!Guid.TryParse(request.OrderId, out Guid validGuid))
+                throw new BusinessException("Geçersiz ID formatı. Lütfen geçerli bir Guid gönderin.");
+
             var query = _orderRepository.GetListWithFilterAsQueryable(x => x.Id == Guid.Parse(request.OrderId))
                 .ProjectTo<ListOrderDetailQueryResponse>(_mapper.ConfigurationProvider);
 

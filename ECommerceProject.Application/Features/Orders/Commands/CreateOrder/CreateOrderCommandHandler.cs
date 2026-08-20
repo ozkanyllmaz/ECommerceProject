@@ -77,7 +77,13 @@ namespace ECommerceProject.Application.Features.Orders.Commands.CreateOrder
 
             order.UserId = Guid.Parse(userId);
 
-            order.TotalAmount = orderItems.Sum(x => x.UnitPrice * x.Quantity);
+            var subTotal = orderItems.Sum(x => x.UnitPrice * x.Quantity);
+
+            var taxAmount = subTotal * 0.1m;
+
+            var shippingCost = subTotal >= 1500m ? 0m : 149.90m;
+
+            order.TotalAmount = subTotal + taxAmount + shippingCost;
 
             var num = Guid.NewGuid().ToString().Substring(0, 10).ToUpper();
             order.OrderNumber = (DateTime.UtcNow.ToString("yyyyMMdd") + num);
@@ -132,7 +138,7 @@ namespace ECommerceProject.Application.Features.Orders.Commands.CreateOrder
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return CustomResponseDto.Success(200, "Sipariş başarıyla oluşturuldu");
+            return CustomResponseDto.Success(200, order.OrderNumber, "Sipariş başarıyla oluşturuldu");
         }
     }
 }

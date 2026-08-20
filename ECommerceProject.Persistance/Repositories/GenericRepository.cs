@@ -108,7 +108,7 @@ namespace ECommerceProject.Persistance.Repositories
 
         public IQueryable<T> GetListAsQueryable(bool tracking = true)
         {
-            var query = _context.Set<T>().AsQueryable();
+            var query = _context.Set<T>().OrderByDescending(x => x.CreatedDate).AsQueryable();
             if (!tracking)
             {
                 query = query.AsNoTracking();
@@ -118,7 +118,7 @@ namespace ECommerceProject.Persistance.Repositories
 
         public IQueryable<T> GetListWithFilterAsQueryable(Expression<Func<T, bool>> metod, bool tracking = true)
         {
-            var query = Table.Where(metod);
+            var query = Table.OrderByDescending(x => x.CreatedDate).Where(metod);
             if (!tracking)
                 query = query.AsNoTracking();
             return query;
@@ -147,6 +147,11 @@ namespace ECommerceProject.Persistance.Repositories
         public void RemoveRange(IEnumerable<T> entities)
         {
             Table.RemoveRange(entities);
+        }
+
+        public async Task<TResult?> FirstOrDefaultAsync<TResult>(IQueryable<TResult> query, CancellationToken cancellationToken = default)
+        {
+            return await query.FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

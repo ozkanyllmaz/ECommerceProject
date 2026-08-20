@@ -34,6 +34,7 @@ namespace ECommerceProject.Persistance
             services.AddScoped<IExceptionLogRepository, ExceptionLogRepository>();
             services.AddScoped<IRequestLogRepository, RequestLogRepository>();
             services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         }
     }
 }
