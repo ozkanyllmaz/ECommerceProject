@@ -20,12 +20,26 @@ namespace ECommerceProject.Persistance.Repositories
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public IQueryable<User> GetLoginUser(string userId)
+        {
+            return _context.Users
+                .Where(x => x.Id == Guid.Parse(userId))
+                .AsQueryable();
+        }
+
         public async Task<IList<string>> GetRolesByUserIdAsync(Guid userId)
         {
             return await _context.UserRoles
                 .Where(ur => ur.UserId == userId)
                 .Select(ur => ur.Role.Name)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetTotalUserCount()
+        {
+            return await _context.Users
+                .Where(u => u.Status == true)
+                .CountAsync();
         }
     }
 }

@@ -10,5 +10,9 @@ namespace ECommerceProject.Application.Repositories
         Task<User?> GetByEmailAsync(string email);
 
         Task<IList<string>> GetRolesByUserIdAsync(Guid userId);
+
+        IQueryable<User> GetLoginUser(string userId);
+
+        Task<int> GetTotalUserCount();
     }
 }
