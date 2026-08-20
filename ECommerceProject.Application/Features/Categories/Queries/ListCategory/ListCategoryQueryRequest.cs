@@ -7,9 +7,8 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Categories.Queries.ListCategory
 {
-    public class ListCategoryQueryRequest : IRequest<CustomResponseDto<PaginationResult<ListCategoryQueryResponse>>>, ISecuredRequest
+    public class ListCategoryQueryRequest : IRequest<CustomResponseDto<PaginationResult<ListCategoryQueryResponse>>>
     {
-        public string[] Roles => ["Admin", "Manager", "Customer"];
         public PaginationParameter paginationParameter { get; set; } = new PaginationParameter();
     }
 }
