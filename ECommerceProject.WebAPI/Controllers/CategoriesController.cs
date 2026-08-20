@@ -3,6 +3,7 @@ using ECommerceProject.Application.Features.Categories.Commands.DeleteCategory;
 using ECommerceProject.Application.Features.Categories.Commands.RestoreCategory;
 using ECommerceProject.Application.Features.Categories.Commands.UpdateCategory;
 using ECommerceProject.Application.Features.Categories.Queries.ListCategory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace ECommerceProject.WebAPI.Controllers
         public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryCommandRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> ListCategory([FromQuery] ListCategoryQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
