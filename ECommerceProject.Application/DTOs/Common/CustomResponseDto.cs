@@ -8,9 +8,9 @@ namespace ECommerceProject.Application.DTOs.Common
     public class CustomResponseDto<T>
     {
         // Asıl verimiz (ürün listesi veya null)
-        public T Data { get; set; }
+        public T? Data { get; set; }
         public bool IsSuccessfull { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
         public List<string> Errors { get; set; }
 
         // Sadece backend'in (BaseController) kullancağı statis kodu.
@@ -69,9 +69,10 @@ namespace ECommerceProject.Application.DTOs.Common
     // non-generic veri dönmeyen işlemleri için (Create, Update, Delete)
     public class CustomResponseDto
     {
+        public string? data { get; set; }
         public bool IsSuccessfull { get; set; }
-        public string Message { get; set; }
-        public List<string> Errors { get; set; }
+        public string? Message { get; set; }
+        public List<string>? Errors { get; set; }
         [JsonIgnore]
         public int StatusCode { get; set; }
 
@@ -79,6 +80,17 @@ namespace ECommerceProject.Application.DTOs.Common
         {
             return new CustomResponseDto
             {
+                IsSuccessfull = true,
+                Message = message,
+                StatusCode = statusCode
+            };
+        }
+
+        public static CustomResponseDto Success(int statusCode, string orderNumber, string message = null)
+        {
+            return new CustomResponseDto
+            {
+                data = orderNumber,
                 IsSuccessfull = true,
                 Message = message,
                 StatusCode = statusCode
