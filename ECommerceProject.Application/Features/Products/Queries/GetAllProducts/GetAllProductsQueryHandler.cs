@@ -24,7 +24,20 @@ namespace ECommerceProject.Application.Features.Products.Queries.GetAllProducts
 
         public async Task<CustomResponseDto<PaginationResult<GetAllProductsQueryResponse>>> Handle(GetAllProductsQueryRequest request, CancellationToken cancellationToken)
         {
+
             var query = _productRepository.GetListAsQueryable(tracking: false);
+
+            if (!string.IsNullOrWhiteSpace(request.CategoryId))
+                query = query.Where(x => x.CategoryId == Guid.Parse(request.CategoryId));
+
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+                query = query.Where(x => x.Name.ToLower().Contains(request.SearchTerm.ToLower()));
+
+            if(request.MinPrice.HasValue)
+                query = query.Where(x => x.Price >=  request.MinPrice.Value);
+
+            if (request.MaxPrice.HasValue)
+                query = query.Where(x => x.Price <= request.MaxPrice.Value);
 
             // AutoMapper'ın ProjectTo metodu ile SQL sorgusunu DTO'ya uygun hale getirir ve extension metot ile pagging yapar.
             var pagedResult = await query

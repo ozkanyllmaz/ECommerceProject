@@ -14,6 +14,7 @@ using ECommerceProject.Application.Features.Products.Commands.RestoreProduct;
 using ECommerceProject.Application.Features.Products.Commands.UpdateProduct;
 using Microsoft.AspNetCore.Authorization;
 using ECommerceProject.Application.Features.Products.Queries.GetUpdatedProduct;
+using ECommerceProject.Application.Features.Products.Queries.GetProductsByCategory;
 
 namespace ECommerceProject.WebAPI.Controllers
 {
@@ -21,13 +22,14 @@ namespace ECommerceProject.WebAPI.Controllers
     [ApiController]
     public class ProductsController : CustomBaseController
     {
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllProduct([FromQuery] GetAllProductsQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetProductById([FromRoute] GetProductByIdQueryRequest request)
+        public async Task<IActionResult> GetProductById([FromQuery] GetProductByIdQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
         [Authorize]
@@ -36,7 +38,7 @@ namespace ECommerceProject.WebAPI.Controllers
             => CreateActionResultInstance(await Mediator.Send(request));
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteProduct([FromRoute] DeleteProductCommandRequest request)
+        public async Task<IActionResult> DeleteProduct([FromQuery] DeleteProductCommandRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
 
         [HttpPut("{Id}/restore")]
@@ -50,6 +52,11 @@ namespace ECommerceProject.WebAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetUpdatedProducts([FromQuery] GetUpdatedProductQueryRequest request)
+            => CreateActionResultInstance(await Mediator.Send(request));
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetProductsByCategory([FromQuery] GetProductsByCategoryQueryRequest request)
             => CreateActionResultInstance(await Mediator.Send(request));
     }
 }

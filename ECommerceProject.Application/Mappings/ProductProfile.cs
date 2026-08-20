@@ -3,6 +3,7 @@ using ECommerceProject.Application.Features.Products.Commands.CreateProduct;
 using ECommerceProject.Application.Features.Products.Commands.UpdateProduct;
 using ECommerceProject.Application.Features.Products.Queries.GetAllProducts;
 using ECommerceProject.Application.Features.Products.Queries.GetProductById;
+using ECommerceProject.Application.Features.Products.Queries.GetProductsByCategory;
 using ECommerceProject.Application.Features.Products.Queries.GetUpdatedProduct;
 using ECommerceProject.Domain.Entities;
 using System;
@@ -22,6 +23,7 @@ namespace ECommerceProject.Application.Mappings
             CreateMap<Product, GetAllProductsQueryResponse>();
             CreateMap<Product, GetProductByIdQueryResponse>();
             CreateMap<Product, GetUpdatedProductQueryResponse>();
+            CreateMap<Product, GetProductsByCategoryQueryResponse>();
 
             // Veri ekleme, güncelle
             // Akış Yönü: Frontend -> Backend -> Db

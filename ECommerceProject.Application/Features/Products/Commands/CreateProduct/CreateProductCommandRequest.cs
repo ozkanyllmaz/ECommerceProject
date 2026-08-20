@@ -13,6 +13,7 @@ namespace ECommerceProject.Application.Features.Products.Commands.CreateProduct
     {
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
+        public string CategoryId { get; set; } = null!;
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string? ImageUrl { get; set; }

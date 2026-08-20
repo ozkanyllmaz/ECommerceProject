@@ -7,10 +7,9 @@ using System.Text;
 
 namespace ECommerceProject.Application.Features.Products.Queries.GetProductById
 {
-    public class GetProductByIdQueryRequest : IRequest<CustomResponseDto<GetProductByIdQueryResponse>>, ISecuredRequest
+    public class GetProductByIdQueryRequest : IRequest<CustomResponseDto<GetProductByIdQueryResponse>>
     {
         public Guid Id { get; set; }
 
-        public string[] Roles => ["Admin", "Manager", "Customer"];
     }
 }
