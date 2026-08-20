@@ -83,6 +83,18 @@ builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(ProductProfile).Assembl
 // .NET'in HttpContext'e erişebilmesini sağlar.
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // react app adresi
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials(); // tokenler için gerekli
+        });
+});
+
 var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
@@ -94,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
 app.UseAuthorization();

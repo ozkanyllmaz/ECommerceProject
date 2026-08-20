@@ -10,6 +10,7 @@ namespace ECommerceProject.Application.Repositories
         Task<RefreshToken?> GetAccessTokenWithUserAsync(string refreshToken);
         Task<RefreshToken?> GetRefreshTokenWithRefreshTokenAndDeviceId(string refreshToken, string deviceId);
         Task<RefreshToken?> GetTokenByUserIdAndDeviceAsync(string userId, string deviceId);
+        Task<string?> GetDeviceIdByRefreshToken(string refreshToken);
 
     }
 }

@@ -39,5 +39,14 @@ namespace ECommerceProject.Persistance.Repositories
                 .Include(rt => rt.User)
                 .FirstOrDefaultAsync(rt => rt.AccessToken == token);
         }
+
+        public async Task<string?> GetDeviceIdByRefreshToken(string refreshToken)
+        {
+            return await _context.RefreshTokens
+                .Where(x => x.Token == refreshToken)
+                .Select(x => x.DeviceId)
+                .FirstOrDefaultAsync();
+                
+        }
     }
 }
