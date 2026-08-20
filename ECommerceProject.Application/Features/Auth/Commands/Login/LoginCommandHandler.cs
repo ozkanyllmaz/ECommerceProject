@@ -36,6 +36,9 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Login
             if (!HashingHelper.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 throw new AuthenticationException("Email veya şifre hatalı");
 
+            if (user.Status == false)
+                throw new BusinessException("Hesabınız devre dışı");
+
             // Token güvenliği için deviceId
             string deviceId = Guid.NewGuid().ToString();
             string createdByIp = _currentUserService.CreatedById ?? "Unknown";

@@ -27,9 +27,9 @@ namespace ECommerceProject.Application.Features.Auth.Commands.RefreshTokens
 
         public async Task<CustomResponseDto<RefreshTokensCommandResponse>> Handle(RefreshTokensCommandRequest request, CancellationToken cancellationToken)
         {
-            var deviceId = _currentUserService.DeviceId;
+            var deviceId = await _refreshTokenRepository.GetDeviceIdByRefreshToken(request.RefreshToken);
             if (string.IsNullOrEmpty(deviceId))
-                throw new NotFoundException("Cihaz kimliği bulunamadı"); 
+                throw new NotFoundException("Cihaz id si bulunamadı refresh tokenle ilişkili");
 
             var existingToken = await _refreshTokenRepository.GetRefreshTokenWithRefreshTokenAndDeviceId(request.RefreshToken, deviceId);
             if (existingToken == null)

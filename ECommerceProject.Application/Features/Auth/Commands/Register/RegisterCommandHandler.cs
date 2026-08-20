@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ECommerceProject.Application.Abstractions.UnitOfWorks;
 using ECommerceProject.Application.DTOs.Common;
 using ECommerceProject.Application.Exceptions;
 using ECommerceProject.Application.Repositories;
@@ -15,11 +16,15 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Register
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterCommandHandler(IUserRepository userRepository, IMapper mapper)
+        public RegisterCommandHandler(IUserRepository userRepository, IMapper mapper, IUserRoleRepository userRoleRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _userRoleRepository = userRoleRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CustomResponseDto<RegisterCommandResponse>> Handle(RegisterCommandRequest request, CancellationToken cancellationToken)
@@ -34,9 +39,17 @@ namespace ECommerceProject.Application.Features.Auth.Commands.Register
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.Status = true;
-
+            
             await _userRepository.AddAsync(user);
-            await _userRepository.SaveAsync();
+
+            var userRole = new UserRole
+            {
+                UserId = user.Id,
+                RoleId = Guid.Parse("cbd86d8d-ed20-4f99-da06-08deebd7254d")
+            };
+
+            await _userRoleRepository.AddAsync(userRole);
+            await _unitOfWork.SaveChangesAsync();    
 
             return CustomResponseDto<RegisterCommandResponse>.Success(201, "Kayıt oluşturuldu");
 
